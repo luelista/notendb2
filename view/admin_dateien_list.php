@@ -1,0 +1,17 @@
+
+<form action="<?= URL_PREFIX ?>admin/datei/new?datei=<?= $DID ?>" method="post">
+<input type="submit" name="create" value="Erstellen"></form>
+
+<table width=400>
+<tr><th>Jahr</th><th>Hj.</th><th>Schulform</th><th>Stufe</th><th>Aktion</th></tr>
+<?php foreach($Dateien as $d): ?>
+<tr>
+<td><?= $d["jahr"] ?></td>
+<td><?= $d["hj"] ?></td>
+<td><?= $d["schulform"] ?></td>
+<td><?= $d["stufe"] ?></td>
+<td><a href="<?= URL_PREFIX ?>admin/datei/<?= $d["did"] ?>?datei=<?= $DID ?>">Bearbeiten</a></td>
+</tr>
+<?php endforeach; ?>
+</table>
+
