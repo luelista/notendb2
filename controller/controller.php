@@ -18,10 +18,10 @@
       
       $this->DID = isset($_GET["datei"]) && intval($_GET["datei"]) > 0 ? intval($_GET["datei"]) : -1;
       set_view_var("DID", $this->DID);
+      set_view_var("IsAdmin", $this->Session->isAdmin());
       
       $user = $this->Session->getUser();
       $this->template_vars["Benutzername"] = $user["kuerzel"];
-      $this->template_vars["IsAdmin"] = $this->Session->isAdmin();
       
       $this->load_menu();
     }

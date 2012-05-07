@@ -123,6 +123,44 @@
     }
     
     
+    function lehrer_import() {
+      if ((isset($_FILES["file"])) and ($_FILES["file"]["error"]==0)) {
+        if (file_exists($_FILES["file"]["tmp_name"])) {
+          try {
+            $file=file_get_contents($_FILES["file"]["tmp_name"]);
+            $cont=array_slice(explode("\n",$file),1); //Remove Header Line
+            $ct=0;
+            foreach ($cont as $s) {
+              $s=explode(":",trim($s));
+              if (count($s)==5) {
+                $this->Lehrer->set(null,array(
+                            "name" => $s[1],
+                            "vorname" => $s[2],
+                            "kuerzel" => $s[0],
+                            "geburtsdatum" => $s[3],
+                            "password" => $this->DB->hash("54tzck23", 1, $s[0])
+                            )
+                    );
+                $ct++;
+              }
+            }
+            $this->template_vars["Inhalt"] = "<h3>Success!</h3>".$ct." Lehrer wurden importiert";
+            $this->display_layout();
+            return;
+          } catch (Exception $e) {
+            $this->template_vars["Inhalt"] = "<h3>Fehler beim Import</h3>Datei beschädigt<p> ($e)";
+            $this->display_layout();
+            return;
+          }
+        }
+      } else {
+        $this->template_vars["Inhalt"] = "<h3>Fehler beim Import</h3>Datei beschädigt";
+        $this->display_layout();
+        return;
+      }
+    }
+    
+    
     function set_password($lehrerID) {
       $this->require_login();
       $lehrerID = intval($lehrerID);

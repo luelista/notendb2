@@ -17,6 +17,7 @@
              "name" => "'%s'",
              "vorname" => "'%s'",
              "password" => "'%s'",
+             "geburtsdatum" => "'%s'",
              "is_admin" => "%d",
              "kommentar" => "'%s'"
         );
@@ -61,6 +62,7 @@
         $this->hash($password, 1, $username), $lid);
       return $this->execute();
     }
+    
     
     
   }

@@ -80,17 +80,17 @@
 							$ct++;
 						}
 						}
-					$this->template_vars["Inhalt"] = $ct." Schüler wurden importiert";
+					$this->template_vars["Inhalt"] = "<h3>Success!</h3>".$ct." Schüler wurden importiert";
 					$this->display_layout();
 					return;
 				} catch (Exception $e) {
-					$this->template_vars["Inhalt"] = "Datei beschädigt";
+					$this->template_vars["Inhalt"] = "<h3>Fehler beim Import</h3>Datei beschädigt";
 					$this->display_layout();
 					return;
 				}
 			}
 		} else {
-			$this->template_vars["Inhalt"] = "Datei beschädigt";
+			$this->template_vars["Inhalt"] = "<h3>Fehler beim Import</h3>Datei beschädigt";
 			$this->display_layout();
 			return;
 		}
