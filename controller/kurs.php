@@ -43,6 +43,13 @@
       $this->display_layout();
     }
     
+    function delete() {
+      $this->Kurs->delete($_POST["kuid"]);
+      
+      header("Location: ".URL_PREFIX."kurs/view?datei=".$this->DID);
+      
+    }
+    
     function edit($kuid) {
       if ($kuid == "new") $id = null; else $id = intval($kuid);
       
@@ -83,7 +90,8 @@
                           "MethodURL" => "kurs/edit/$kuid",
                           "Lehrer" => $lehrer,
                           "Schueler" => $schueler,
-                          "KursTemplates" => $templates
+                          "KursTemplates" => $templates,
+                          "Kuid" => $id
                      ));
       
       $this->display_layout();
