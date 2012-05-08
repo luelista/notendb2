@@ -37,9 +37,10 @@
     }
     
     function zuordnung() {
+      $isTutor = $this->Session->isTutor($this->DID);
       
       $schueler = $this->Schueler->get_all();
-      $kurse = $this->Kurs->get_all_with_lehrer_namen();
+      $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
       #var_dump($_POST);
       
       if($_POST["rsk_enable"]) {
@@ -51,11 +52,24 @@
               $this->SchuelerKurs->deleteByRel($sid, $kuid);
       }
       
+      $kursPerms = array();
+      foreach($kurse as $d) {
+        $kursPerms[$d["kuid"]] = $d["lehrer_perm"] > 0;
+      }
+      
       for($i = 0; $i < count($schueler); $i++) {
         $this->DB->sql("SELECT rid,r_kuid FROM rel_schueler_kurs WHERE r_sid = %d", $schueler[$i]['sid']);
         $info = $this->DB->getlist(); #var_dump($info);
-        foreach($kurse as $d) $schueler[$i]['reldata'][$d['kuid']] = '<input type="checkbox" name="rsk_enable['.$schueler[$i]['sid'].']['.$d['kuid'].']" value="Add">';
-        foreach($info as $d) $schueler[$i]['reldata'][$d['r_kuid']] = '<input type="hidden" name="rsk_enable['.$schueler[$i]['sid'].']['.$d['r_kuid'].']" value="Del"><input type="checkbox" name="rsk_enable['.$schueler[$i]['sid'].']['.$d['r_kuid'].']" value="Keep" checked>';
+        foreach($kurse as $d) {
+          $enabled="";
+          if (!$kursPerms[$d["kuid"]] && !$isTutor) $enabled="disabled";
+          $schueler[$i]['reldata'][$d['kuid']] = '<input type="checkbox" name="rsk_enable['.$schueler[$i]['sid'].']['.$d['kuid'].']" value="Add" '.$enabled.'>';
+        }
+        foreach($info as $d) {
+          $enabled="";
+          if (!$kursPerms[$d["r_kuid"]] && !$isTutor) $enabled="disabled";
+          $schueler[$i]['reldata'][$d['r_kuid']] = '<input type="hidden" name="rsk_enable['.$schueler[$i]['sid'].']['.$d['r_kuid'].']" value="Del"><input type="checkbox" name="rsk_enable['.$schueler[$i]['sid'].']['.$d['r_kuid'].']" value="Keep" checked '.$enabled.'>';
+        }
       }
       
       $this->template_vars["Inhalt"] = 
@@ -90,15 +104,16 @@
       $this->display_layout();
     }
     
-    function noten($all) {
-      if($all!="alle")$all="meine";
+    function noten() {
+      //if($all!="alle")$all="meine";
+      $isTutor = $this->Session->isTutor($this->DID);
       
       $schueler = $this->Schueler->get_all();
-      if ($all=="alle") {
-        $kurse = $this->Kurs->get_all_with_lehrer_namen();
-      } else {
-        $kurse = $this->Kurs->get_by_lid_with_lehrer_namen($this->Session->getUID());
-      }
+      //if ($all=="alle") {
+        $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
+      //} else {
+      //  $kurse = $this->Kurs->get_by_lid_with_lehrer_namen($this->Session->getUID());
+      //}
       
       if ($_POST["rsk"]) {
         foreach($_POST["rsk"] as $rid=>$d) {
@@ -106,15 +121,28 @@
         }
       }
       
+      $kursPerms = array();
+      foreach($kurse as $d) {
+        $kursPerms[$d["kuid"]] = $d["lehrer_perm"] > 0;
+      }
+      
       for($i = 0; $i < count($schueler); $i++) {
         $this->DB->sql("SELECT rid,r_kuid,note,fehlstunden,fehlstunden_un FROM rel_schueler_kurs WHERE r_sid = %d", $schueler[$i]['sid']);
         $info = $this->DB->getlist();
         foreach($kurse as $d) $schueler[$i]['reldata'][$d['kuid']] = '--';
-        foreach($info as $d)
-          $schueler[$i]['reldata'][$d['r_kuid']] = 
-            '<nobr><input type="text" name="rsk['.$d['rid'].'][n]" class=n value="'.htmlspecialchars($d['note']).'" maxlength=2>'.
-            '<input type="text" name="rsk['.$d['rid'].'][f]" value="'.htmlspecialchars($d['fehlstunden']).'">'.
-            '<input type="text" name="rsk['.$d['rid'].'][u]" value="'.htmlspecialchars($d['fehlstunden_un']).'"></nobr>';
+        foreach($info as $d) {
+          if ($isTutor || $kursPerms[$d['r_kuid']]) {
+            $schueler[$i]['reldata'][$d['r_kuid']] = 
+              '<nobr><input type="text" name="rsk['.$d['rid'].'][n]" class=n value="'.htmlspecialchars($d['note']).'" maxlength=2>'.
+              '<input type="text" name="rsk['.$d['rid'].'][f]" value="'.htmlspecialchars($d['fehlstunden']).'">'.
+              '<input type="text" name="rsk['.$d['rid'].'][u]" value="'.htmlspecialchars($d['fehlstunden_un']).'"></nobr>';
+          } else {
+            $schueler[$i]['reldata'][$d['r_kuid']] = 
+              '<nobr>'.htmlspecialchars($d['note']).' | '.htmlspecialchars($d['fehlstunden']).' | '.htmlspecialchars($d['fehlstunden_un']).'</nobr>';
+            
+          }
+          
+        }
         
       }
       

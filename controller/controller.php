@@ -31,8 +31,7 @@
         "kurs/view"             => "Liste der Kurse",
         "schueler/view"         => "Schülerliste",
         "tabelle/zuordnung"     => "Zuordnung",
-        "tabelle/noten/meine"   => "Noten(eigene)",
-        "tabelle/noten/alle"    => "Noten(alle)",
+        "tabelle/noten"         => "Notenvergabe",
         "tabelle/zeugnis"       => "Zeugnisdruck",
         "offline/info"          => "Offline"
       );

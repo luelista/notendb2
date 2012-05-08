@@ -14,6 +14,7 @@
     var $structure = array(
              "kuerzel" => "'%s'",
              "anrede" => "'%s'",
+             "titel" => "'%s'",
              "name" => "'%s'",
              "vorname" => "'%s'",
              "password" => "'%s'",

@@ -72,13 +72,18 @@
       }
       unset($kurs["kuid"]); unset($kurs["did"]);
       
+      $KursTemplate = load_model("kurs_template");
+      $dateiInfo = $this->Datei->get_by_id($this->DID);
+      $templates = $KursTemplate->get_all_by_target($dateiInfo["schulform"], $dateiInfo["stufe"], $dateiInfo["hj"]);
+      
       $this->template_vars["Inhalt"] = 
                      get_view("kurs_edit", array(
                           "Data" => $kurs,
                           "Error" => false,
                           "MethodURL" => "kurs/edit/$kuid",
                           "Lehrer" => $lehrer,
-                          "Schueler" => $schueler
+                          "Schueler" => $schueler,
+                          "KursTemplates" => $templates
                      ));
       
       $this->display_layout();

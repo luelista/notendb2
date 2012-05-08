@@ -35,7 +35,7 @@
   /********** END OF CONFIGURATION PART ***********************************/
   /********** DO NOT EDIT BEYOND THIS LINE ********************************/
   
-  error_reporting(E_ALL & ~E_NOTICE); 
+  error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED); 
  
   // includes
   require_once ROOT."/system/common.php";

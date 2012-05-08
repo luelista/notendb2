@@ -18,13 +18,29 @@
 			"gewichtung" => "'%d'",
 			"art" => "'%s'",
 			"wochenstunden" => "'%s'",
-			"thema" => "'%s'"
+			"thema" => "'%s'",
+			"display_position" => "%d",
+			"export_position" => "%d"
 		);
 		
     
     function get_all_with_lehrer_namen() {
-      $this->sql("SELECT k.kuid,k.name,k.art,k.wochenstunden,GROUP_CONCAT(l.name) AS lehrer_namen FROM kurs AS k LEFT OUTER JOIN rel_lehrer_kurs AS rlk ON k.kuid=rlk.r_kuid LEFT OUTER JOIN lehrer AS l ON rlk.r_lid=l.lid WHERE did = %d GROUP BY k.kuid ORDER BY k.name,l.name", $this->DID);
+      $this->sql("SELECT k.kuid,k.name,k.art,k.wochenstunden,GROUP_CONCAT(l.name) AS lehrer_namen FROM kurs AS k LEFT OUTER JOIN rel_lehrer_kurs AS rlk ON k.kuid=rlk.r_kuid LEFT OUTER JOIN lehrer AS l ON rlk.r_lid=l.lid WHERE did = %d GROUP BY k.kuid ORDER BY k.display_position,k.name,l.name", $this->DID);
       return $this->getlist();
+    }
+    function get_all_with_lehrer_namen_and_permission($lid) {
+      $this->sql("SELECT
+                 k.kuid,k.name,k.art,k.wochenstunden,GROUP_CONCAT(l.name) AS lehrer_namen,
+                 FIND_IN_SET('%d',GROUP_CONCAT(l.lid)) AS lehrer_perm FROM kurs AS k
+                 LEFT OUTER JOIN rel_lehrer_kurs AS rlk ON k.kuid=rlk.r_kuid
+                 LEFT OUTER JOIN lehrer AS l ON rlk.r_lid=l.lid
+                 WHERE did = %d
+                 GROUP BY k.kuid
+                 ORDER BY k.display_position,k.name,l.name",
+                 $lid, $this->DID);
+      
+      return $this->getlist();
+      
     }
     function get_all_with_lehrer_namen_by_export_position() {
       $this->sql("SELECT k.kuid,k.name,k.art,k.wochenstunden,k.export_position,GROUP_CONCAT(l.name) AS lehrer_namen FROM kurs AS k LEFT OUTER JOIN rel_lehrer_kurs AS rlk ON k.kuid=rlk.r_kuid LEFT OUTER JOIN lehrer AS l ON rlk.r_lid=l.lid WHERE did = %d GROUP BY k.kuid ORDER BY k.export_position", $this->DID);
@@ -39,17 +55,17 @@
       $data["did"] = $this->DID;
       $this->setdata($this->table, $this->idcol, $id, $this->structure, $data);
     }
-      
+    
     function delete($id) {
       $this->sql("DELETE FROM {$this->table} WHERE {$this->idcol} = %d AND did = %d", $id, $this->DID);
       return $this->execute();
     }
-
+    
     function get_all() {
       $this->sql("SELECT * FROM {$this->table} WHERE did = %d ORDER BY name", $this->DID);
       return $this->getlist();
     }
-      
+    
     function get_by_id($id) {
       $this->sql("SELECT * FROM {$this->table} WHERE {$this->idcol} = %d AND did = %d", $id, $this->DID);
       return $this->get();

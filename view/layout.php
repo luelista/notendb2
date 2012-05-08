@@ -5,6 +5,7 @@
 <title>db</title>
 <link rel="stylesheet" type="text/css" href="<?=URL_PREFIX?>view/style.css">
 <link rel='shortcut icon' href='http://mw.wikilab.de/favicon.png'/>
+<script src="<?= URL_PREFIX ?>view/jquery.js"></script>
 </head>
 <body>
 
@@ -12,12 +13,16 @@
 <div class="wrapper">
   <div class="sysmenu">
     <strong><?= $Benutzername ?></strong>
-    <?php if ($IsAdmin): ?>
-    | <a href="<?=URL_PREFIX?>admin/lehrer_list?datei=<?=$DID?>">Lehrer</a>
-    | <a href="<?=URL_PREFIX?>admin/dateien?datei=<?=$DID?>">Dateien</a>
-    <?php endif; ?>
+    | <a href="<?=URL_PREFIX?>kurs_template/view?datei=<?=$DID?>">Kursvorlagen</a>
     | <a href="<?=URL_PREFIX?>user/change_password?datei=<?=$DID?>">Passwort ändern</a>
     | <a href="<?=URL_PREFIX?>user/logout">Abmelden</a>
+    <?php if ($IsAdmin): ?>
+    <br><small>
+      Administration:
+      <a href="<?=URL_PREFIX?>admin/lehrer_list?datei=<?=$DID?>">Lehrer</a>
+    | <a href="<?=URL_PREFIX?>admin/dateien?datei=<?=$DID?>">Dateien</a>
+    </small>
+    <?php endif; ?>
   </div>
   <h1>
     <a href="<?=URL_PREFIX?>">Noten-Verwaltung</a>
