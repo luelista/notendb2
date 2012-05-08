@@ -47,6 +47,7 @@
   <input type="submit" value="   Speichern   ">
   <input type="submit" value="   Speichern und Neu  " title="Diesen Eintrag erstellen und danach einen weiteren Eintrag erstellen">
   
+  
   </td><td valign=top>
   
   <h4>Zugeordnete Lehrer</h4>
@@ -71,3 +72,10 @@
   
   </form>
   
+  <?php if($Kuid): ?>
+  <form action="<?=URL_PREFIX?>kurs/delete?datei=<?= $DID ?>" method="post">
+  <input type="hidden" name="kuid" value="<?= $Kuid ?>">
+  <input type="submit" name="delete" value="Kurs löschen">
+  
+  </form>
+  <?php endif; ?>
