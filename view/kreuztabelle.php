@@ -47,6 +47,8 @@ tr.headrow .firstcol {
   max-width: inherit; padding: 5px 25px;
 }
 .tableContainer { overflow: auto; width: 97%; height: 500px; position: absolute; }
+h2 { margin: 0; padding-right: 10px; }
+#footer { display: none; }
 </style>
 
 <script>
@@ -55,6 +57,11 @@ tr.headrow .firstcol {
       $(".firstcol").css("left", -$(".tableContainer table").position().left + 5 + "px");
     });
     $(".firstcol").css("left", -$(".tableContainer table").position().left + 5 + "px");
+    function onResizeTab() {
+      $(".resizeMe").css("height", $(window).height() - 120 + "px");
+    }
+    $(window).resize(onResizeTab);
+    onResizeTab();
   });
   
 </script>
@@ -73,7 +80,7 @@ tr.headrow .firstcol {
 <h2>Kreuztabelle ansehen/bearbeiten</h2>
 
 
-<div class="tableContainer">
+<div class="tableContainer resizeMe">
 <div>
 <table class="kreuztabelle">
 
@@ -135,7 +142,7 @@ for($i = 0; $i < count($Kurse);){
 
 </table>
 </div></div>
-<div style="height:500px"></div>
+<div style="height:500px" class="resizeMe"></div>
 
   </form>
   
