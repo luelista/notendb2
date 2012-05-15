@@ -43,7 +43,7 @@
       
     }
     function get_all_with_lehrer_namen_by_export_position() {
-      $this->sql("SELECT k.kuid,k.name,k.art,k.wochenstunden,k.export_position,GROUP_CONCAT(l.name) AS lehrer_namen FROM kurs AS k LEFT OUTER JOIN rel_lehrer_kurs AS rlk ON k.kuid=rlk.r_kuid LEFT OUTER JOIN lehrer AS l ON rlk.r_lid=l.lid WHERE did = %d GROUP BY k.kuid ORDER BY k.export_position", $this->DID);
+      $this->sql("SELECT k.kuid,k.name,k.art,k.wochenstunden,k.export_position,k.thema,GROUP_CONCAT(l.name) AS lehrer_namen FROM kurs AS k LEFT OUTER JOIN rel_lehrer_kurs AS rlk ON k.kuid=rlk.r_kuid LEFT OUTER JOIN lehrer AS l ON rlk.r_lid=l.lid WHERE did = %d GROUP BY k.kuid ORDER BY k.export_position, k.display_position", $this->DID);
       return $this->getlist();
     }
     function get_by_lid_with_lehrer_namen($lid) {
