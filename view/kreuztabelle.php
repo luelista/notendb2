@@ -6,6 +6,7 @@
 .kreuztabelle th, .kreuztabelle tr.headrow th {
   background: #aaa;
 }
+.kreuztabelle tr.footrow th, .kreuztabelle tr.footrow td { background: #444 !important; color: #fff; text-align: center; }
 .kreuztabelle tr {
   background: #fafafa;
 }
@@ -47,14 +48,53 @@ tr.headrow .firstcol {
   max-width: inherit; padding: 5px 25px;
 }
 .tableContainer { overflow: auto; width: 97%; height: 500px; position: absolute; }
+h2 { margin: 0; padding-right: 10px; }
+#footer { display: none; }
 </style>
 
 <script>
+  var tabMode = "<?=$controller_function ?>";
   $(function() {
     $(".tableContainer").scroll(function() {
       $(".firstcol").css("left", -$(".tableContainer table").position().left + 5 + "px");
     });
     $(".firstcol").css("left", -$(".tableContainer table").position().left + 5 + "px");
+    function onResizeTab() {
+      $(".resizeMe").css("height", $(window).height() - 120 + "px");
+    }
+    $(window).resize(onResizeTab);
+    onResizeTab();
+
+    if (tabMode == "noten") {
+      function calcFehlstd() {
+        $("tr").each(function(el) {
+          var sumF = 0, sumU = 0;
+          $(this).find("input.f").each(function() { sumF += +$(this).val(); });
+	  $(this).find("input.u").each(function() { sumU += +$(this).val(); });
+	
+	  $(this).find("span.f").each(function() { sumF += +$(this).text(); });
+          $(this).find("span.u").each(function() { sumU += +$(this).text(); });
+	  
+	  $(this).find(".fsResult").html("<nobr><b>" + sumF + " | " + sumU + "</b></nobr>");
+        });
+      }
+      calcFehlstd();
+      
+      $("input.f, input.u").change(function() { calcFehlstd(); });
+    }
+    if (tabMode == "zuordnung") {
+      function calcCount() {
+        $("td.cnt").each(function() {
+          var cnt=0, id=$(this).attr("data-kuid");
+          $("input[name^='rsk_enable['][name$='][" + id + "]']:checked").each(function(){cnt++});
+          $(this).html(cnt);
+        });
+      }
+      $("input[type=checkbox]").each(function() { var a=this;$(a).closest("td").click(function(e) {
+        if(e.target.tagName!="INPUT")a.checked=!a.checked; calcCount();
+      });});
+      calcCount();
+    }
   });
   
 </script>
@@ -73,7 +113,7 @@ tr.headrow .firstcol {
 <h2>Kreuztabelle ansehen/bearbeiten</h2>
 
 
-<div class="tableContainer">
+<div class="tableContainer resizeMe">
 <div>
 <table class="kreuztabelle">
 
@@ -91,6 +131,9 @@ for($i = 0; $i < count($Kurse);){
     echo "<th colspan=".($j).">{$Kurse[$i-1]["name"]}</th>";}
 ?>
 <!-- Ende Kurse -->
+
+<th>-</th>
+
 </tr>
 
 
@@ -103,6 +146,9 @@ for($i = 0; $i < count($Kurse);){
 <th class="<?= $colodd ? "colodd" : "" ?>"><?= $e["art"] ?>&nbsp;|&nbsp;<?= $e["wochenstunden"] ?></th>
 <?php endforeach; ?>
 <!-- Ende Lehrer -->
+
+<th>-</th>
+
 </tr>
 
 <tr class="headrow">
@@ -113,6 +159,9 @@ for($i = 0; $i < count($Kurse);){
 <th class="<?= $colodd ? "colodd" : "" ?>"><?= $e["lehrer_namen"] ?></th>
 <?php endforeach; ?>
 <!-- Ende Lehrer -->
+
+<th>-</th>
+
 </tr>
 <?php endif; ?>
 
@@ -128,14 +177,31 @@ for($i = 0; $i < count($Kurse);){
 <td class="<?= $colodd ? "colodd" : "" ?>"><?= $d['reldata'][$ddd['kuid']] ?></td>
 <?php endforeach; ?>
 
+<td class="fsResult">-</td>
+
 </tr>
 <!-- Ende Schueler -->
 <?php endforeach; ?>
 
 
+<!-- Fusszeile -->
+<tr class="footrow">
+<th class=firstcol>Anzahl</th>
+<th class=boguscol>&nbsp;</th>
+
+<?php $colodd = false;$lastkurs=""; foreach($Kurse as $ddd): if($ddd["name"]!=$lastkurs){$lastkurs=$ddd["name"];$colodd=!$colodd;} ?>
+<td class="cnt" data-kuid="<?= $ddd['kuid'] ?>">0</td>
+<?php endforeach; ?>
+
+<td>&nbsp;</td>
+
+</tr>
+<!-- Ende Fusszeile -->
+
+
 </table>
 </div></div>
-<div style="height:500px"></div>
+<div style="height:500px" class="resizeMe"></div>
 
   </form>
   

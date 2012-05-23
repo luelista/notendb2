@@ -134,11 +134,11 @@
           if ($isTutor || $kursPerms[$d['r_kuid']]) {
             $schueler[$i]['reldata'][$d['r_kuid']] = 
               '<nobr><input type="text" name="rsk['.$d['rid'].'][n]" class=n value="'.htmlspecialchars($d['note']).'" maxlength=2>'.
-              '<input type="text" name="rsk['.$d['rid'].'][f]" value="'.htmlspecialchars($d['fehlstunden']).'">'.
-              '<input type="text" name="rsk['.$d['rid'].'][u]" value="'.htmlspecialchars($d['fehlstunden_un']).'"></nobr>';
+              '<input type="text" name="rsk['.$d['rid'].'][f]" class=f value="'.htmlspecialchars($d['fehlstunden']).'">'.
+              '<input type="text" name="rsk['.$d['rid'].'][u]" class=u value="'.htmlspecialchars($d['fehlstunden_un']).'"></nobr>';
           } else {
             $schueler[$i]['reldata'][$d['r_kuid']] = 
-              '<nobr>'.htmlspecialchars($d['note']).' | '.htmlspecialchars($d['fehlstunden']).' | '.htmlspecialchars($d['fehlstunden_un']).'</nobr>';
+              '<nobr>'.htmlspecialchars($d['note']).' | <span class=f>'.htmlspecialchars($d['fehlstunden']).'</span> | <span class=u>'.htmlspecialchars($d['fehlstunden_un']).'</span></nobr>';
             
           }
           
@@ -204,6 +204,12 @@ STYLE;
       
       $output .= ',"FEHL","UN"';
       
+      $globPositions = array();
+      foreach($kurse as $d) {
+        if ($globPositions[$d['export_position']]) $globPositions[$d['export_position']] = null;
+	else $globPositions[$d['export_position']] = ',"'.$d['name'].'","'.$d['art'].'","'.$d['wochenstunden'].'","--","--","--"';
+      }
+      
       for($i = 0; $i < count($schueler); $i++) {
         $this->DB->sql("SELECT rid,r_kuid,note,fehlstunden,fehlstunden_un FROM rel_schueler_kurs WHERE r_sid = %d", $schueler[$i]['sid']);
         $info = $this->DB->getlist();
@@ -236,15 +242,20 @@ STYLE;
           //} else {
           //  $output .= ',"","","","","",""';
           //}
-          if ($positions[$p]) $output .= $positions[$p]; else $output .=  ',"","","","","","",""';
+          if ($positions[$p]) $output .= $positions[$p];
+	  elseif ($globPositions[$p]) $output .= $globPositions[$p];
+          else $output .=  ',"--","--","--","--","--","--","--"';
         }
         
         $output .= ',"'.$fehl.'","'.$un.'"';
         
       }
       
-      $this->template_vars["Inhalt"] = "<pre>" . $output . "</pre>";
-      $this->display_layout();
+      //$this->template_vars["Inhalt"] = "<pre>" . $output . "</pre>";
+      //$this->display_layout();
+      header("Content-disposition: attachment; filename=\"output.csv\"");
+      header("Content-Type: text/plain");
+      echo $output;
     }
     
     
