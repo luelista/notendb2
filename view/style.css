@@ -33,8 +33,22 @@ h1 a:visited{ text-decoration: none; color:#ffffff !important; }
 #nav li a { display: block; float: left; padding: 5px 10px 5px 10px; color: #444; text-decoration: none; }
 #nav li a:hover { color: #000; text-decoration: underline; }
 #nav li a.current { color: #000; background: white; text-decoration: underline; border: 1px solid #ddd; border-bottom: 0; padding: 7px 9px 7px 9px; }
+#nav .sel { float: right; }
+#nav .clear { clear: both; }
 
 th { text-align: left; }
 
-#footer { color: #777; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: #eee; padding: 5px 0; font: status-bar;  }
+#footer { color: #777; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; background: #eee; padding: 5px 0; font: status-bar; margin-top: 20px }
 
+
+@media print {
+  h1, h2 { font-size: 10pt; color: black; text-shadow: none !important; }
+  #header .sysmenu, #nav ul, #nav .clear { display: none; }
+  #header, #footer, #nav { padding: 0; border: 0; background: transparent; height: auto; }
+  .wrapper { max-width: auto; padding: 0; margin: 0; }
+  input[type=submit], input[type=button] { display: none }
+  table { border-collapse:collapse; }
+  table,th, td { border: 1px solid #888; }
+  input { border: 0 !important; padding: 0; margin: 0; }
+  .noprint { display: none }
+}

@@ -22,32 +22,42 @@
 .kreuztabelle th.colodd {
   background: #bbb;
 }
-.kreuztabelle tr th.firstcol {
-  position: absolute; width: 140px; overflow: hidden; padding: 3px 5px;
-  background: #bbd;
+@media screen {
+  .kreuztabelle tr th.firstcol {
+    position: absolute; width: 140px; overflow: hidden; padding: 3px 5px;
+    background: #bbd;
+  }
+  .kreuztabelle tr.odd th.firstcol { background: #99b; }
+  .kreuztabelle .boguscol {
+    width: 150px !important;
+  }
+  .kreuztabelle {
+    width: auto; table-layout:fixed
+  }
+  tr, tr td {
+    height: 19px;
+  }
+  tr.headrow, tr.headrow td {
+    height: 30px;
+  }
+  tr.headrow .firstcol {
+    height: 24px;
+  }
+  .kreuztabelle tr:hover th, .kreuztabelle tr:hover td { background: #afa !important; }
+  .wrapper {
+    max-width: inherit; padding: 5px 25px;
+  }
+  .tableContainer { overflow: auto; width: 97%; height: 500px; position: absolute; }
 }
-.kreuztabelle tr.odd th.firstcol { background: #99b; }
-.kreuztabelle .boguscol {
-  width: 150px !important;
+@media print {
+  .boguscol { display: none }
+  .resizeMe { height: auto !important; }
+  table { overflow: hidden; table-layout: fixed; white-space: nowrap; width: 0px; }
+  td, th { overflow: hidden; white-space: nowrap; }
+  td, .Hlehrer th, .Hkursinfo th { width: 40px; }
+  .Hkursname th span { overflow: hidden; display: block; width: 44px; }
+  .firstcol { width: 150px; }
 }
-tr, tr td {
-  height: 19px;
-}
-tr.headrow, tr.headrow td {
-  height: 30px;
-}
-
-tr.headrow .firstcol {
-  height: 24px;
-}
-.kreuztabelle {
-  width: auto; table-layout:fixed
-}
-.kreuztabelle tr:hover th, .kreuztabelle tr:hover td { background: #afa !important; }
-.wrapper {
-  max-width: inherit; padding: 5px 25px;
-}
-.tableContainer { overflow: auto; width: 97%; height: 500px; position: absolute; }
 h2 { margin: 0; padding-right: 10px; }
 #footer { display: none; }
 </style>
@@ -63,9 +73,21 @@ h2 { margin: 0; padding-right: 10px; }
       $(".resizeMe").css("height", $(window).height() - 120 + "px");
     }
     $(window).resize(onResizeTab);
+    var formSent = false, formDirty = false;
+    $("form").submit(function() { formSent = true } );
+    $("input").change(function() { formDirty = true } );
+    $(window).bind("beforeunload", function() {
+      if (formDirty && !formSent) {
+        e = e || window.event;
+        // For IE and Firefox prior to version 4
+        if (e) e.returnValue = 'ACHTUNG - Die Tabelle enthält noch ungespeicherte Änderungen!';
+        // For Chrome, Safari and Opera 12+
+        return 'ACHTUNG - Die Tabelle enthält noch ungespeicherte Änderungen!';
+      }
+    });
     onResizeTab();
 
-    if (tabMode == "noten") {
+    if (tabMode == "noten" || tabMode == "uebersicht") {
       function calcFehlstd() {
         $("tr").each(function(el) {
           var sumF = 0, sumU = 0;
@@ -108,7 +130,9 @@ h2 { margin: 0; padding-right: 10px; }
   
   <form action="<?=URL_PREFIX?><?= $MethodURL ?>?datei=<?= $DID ?>" method="post">
 
-<input type="submit" name="save" value="     Eingegebene Daten speichern     " style="float:right" />
+<input type="submit" name="save" value="     Eingegebene Daten speichern     " style="float:right;background: lightgreen;border-color: darkgreen" />
+
+<input type="button" value="     Ansicht einstellen...     " style="float:right;background:#ddd" onclick='location.href="<?= URL_PREFIX ?>tabelle/einstellungen/<?= $controller_function ?>?datei=<?= $DID ?>"' />
 
 <h2>Kreuztabelle ansehen/bearbeiten</h2>
 
@@ -121,24 +145,8 @@ h2 { margin: 0; padding-right: 10px; }
 <?php foreach($Schueler as $d): $odd=!$odd; ?>
 
 <?php if($c++%15==0): ?>
-<tr class="headrow">
-<th style=text-align:right class=firstcol><b>Kurs</b></th>
-<th class=boguscol width=150><div style="width:150px">&nbsp;</div></th>
-<!-- Kurse -->
-<?php
-for($i = 0; $i < count($Kurse);){
-  for($j = 0; $i < count($Kurse) && $Kurse[$i-$j]["name"] == $Kurse[$i]["name"]; $i++, $j++);
-    echo "<th colspan=".($j).">{$Kurse[$i-1]["name"]}</th>";}
-?>
-<!-- Ende Kurse -->
 
-<th>-</th>
-
-</tr>
-
-
-
-<tr class="headrow">
+<tr class="headrow Hkursinfo">
 <th style=text-align:right class=firstcol><b>Kurs</b></th>
 <th class=boguscol>&nbsp;</th>
 <!-- Lehrer -->
@@ -151,7 +159,25 @@ for($i = 0; $i < count($Kurse);){
 
 </tr>
 
-<tr class="headrow">
+<tr class="headrow Hkursname">
+<th style=text-align:right class=firstcol><b>Kurs</b></th>
+<th class=boguscol width=150><div style="width:150px">&nbsp;</div></th>
+<!-- Kurse -->
+<?php
+for($i = 0; $i < count($Kurse);){
+  for($j = 0; $i < count($Kurse) && $Kurse[$i-$j]["name"] == $Kurse[$i]["name"]; $i++, $j++);
+    echo "<th colspan=".($j)."><span>{$Kurse[$i-1]["name"]}</span></th>";}
+?>
+<!-- Ende Kurse -->
+
+<th>-</th>
+
+</tr>
+
+
+
+
+<tr class="headrow Hlehrer">
 <th style=text-align:right class=firstcol><b><nobr>Schüler / Lehrer</nobr></b></th>
 <th class=boguscol>&nbsp;</th>
 <!-- Lehrer -->

@@ -9,6 +9,9 @@
 	
   $loadedModels = array();
   
+  /**
+   * Laden eines Models
+   **/
   function load_model($model) {
     global $loadedModels;
     require_once MODEL_DIR."/".$model.".php";
@@ -17,6 +20,10 @@
     return $loadedModels[$class];
   }
   
+  /**
+   * Laden einer für ein Model benötigten Hilfsdatei oder einer
+   * Elternklasse eines vererbten Unter-Models
+   **/
   function require_model($model) {
     global $loadedModels;
     require_once MODEL_DIR."/".$model.".php";

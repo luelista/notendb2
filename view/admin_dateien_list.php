@@ -1,6 +1,10 @@
 
+<h2>Dateien verwalten</h2>
+
+<hr>
 <form action="<?= URL_PREFIX ?>admin/datei/new?datei=<?= $DID ?>" method="post">
-<input type="submit" name="create" value="Erstellen"></form>
+Neue Datei <input type="submit" name="create" value="Erstellen"></form>
+<hr>
 
 <table width=400>
 <tr><th>Jahr</th><th>Hj.</th><th>Schulform</th><th>Stufe</th><th>Aktion</th></tr>

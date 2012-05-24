@@ -11,6 +11,10 @@
   define ("MODEL_DIR", ROOT."/model");
   define ("VIEW_DIR", ROOT."/view");
   
+  /**
+   * Aufsplitten einer URL nach Schrägstrichen unter Berücksichtigung der Standardwerte für
+   * nicht angegebene URL-Bestandteile
+   */
   function split_url($url) {
     $p = strpos($url, "?");
     if ($p !== false) {
@@ -23,7 +27,10 @@
     return $q;
   }
   
-  
+  /**
+   * Laden des durch die URL angegebenen Controllers und Aufrufen der entsprechenden
+   * Controller-Function
+   */
   function load_controller() {
     $url = $_SERVER["REQUEST_URI"];
     if (substr($url, 0, strlen(URL_PREFIX)) == URL_PREFIX) $url = substr($url, strlen(URL_PREFIX));

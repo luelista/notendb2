@@ -10,6 +10,9 @@
   
   $traceContent = array();
   
+  /**
+   * Hinterlegen einer Debug-Ausgabe im Debugspeicher
+   **/
   function trace() {
     global $traceContent,$DISABLE_TRACE;
     
@@ -19,6 +22,9 @@
     $traceContent[] = print_r(func_get_args(), true);
   } 
   
+  /**
+   * Ausgeben des Debugspeichers (muss in der .htconfig.php aktiviert werden)
+   **/
   function print_trace_output($traceContent) { 
     echo "<hr>";
     echo "<h1>Debug/Trace Output</h1>";

@@ -33,7 +33,7 @@
         "tabelle/zuordnung"     => "Zuordnung",
         "tabelle/noten"         => "Notenvergabe",
         "tabelle/zeugnis"       => "Zeugnisdruck",
-        "offline/info"          => "Offline"
+        // --temporarilyDisabled-- "offline/info"          => "Offline"
       );
     }
     

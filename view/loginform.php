@@ -17,6 +17,20 @@
 
 <div id="content">
 <div class="wrapper">
+  <!-- recommend recent browser -->
+  <script>
+  if(!document.getElementById || (navigator.userAgent.indexOf("Firefox") < 1 && navigator.userAgent.indexOf("Chrome") < 1)) {
+  document.write('<div style="border:2px solid red;padding:10px;"><b>Wichtiger Hinweis:</b><br>Um diese Anwendung nutzen zu können, sollten Sie eine aktuelle Version von Mozilla Firefox oder Google Chrome verwenden!</div>');
+  }
+  </script>
+  
+  <!-- recommend javascript -->
+  <noscript>
+  <div style="border:2px solid red;padding:10px;">
+  <b>Wichtiger Hinweis:</b><br>Um diese Anwendung nutzen zu können, muss in Ihrem Browser JavaScript aktiviert sein!
+  </div>
+  </noscript>
+  
   
   <?php if($Error): ?>
   <h2>Fehler</h2>
@@ -24,9 +38,9 @@
   <p><?= $Error ?></p>
   <?php endif; ?>
   
-  <h2>Bitte einloggen</h2>
   
-  <form action="<?=URL_PREFIX?>user/login" method="post">
+  <form action="<?=URL_PREFIX?>user/login" method="post" style="display:none" id="showMe">
+  <h2>Bitte einloggen</h2>
   <table>
   
   <tr><td>Benutzername: </td><td><input type="text" name="username"></td></tr>
@@ -36,6 +50,8 @@
   </form>
   
   <br><br><br>
+  
+  <script> document.getElementById("showMe").style.display="block" </script>
 </div>
 </div>
 

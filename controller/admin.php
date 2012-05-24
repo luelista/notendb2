@@ -169,12 +169,12 @@
       $lehrerInfo = $Lehrer->get_by_id($lehrerID);
       
       $template_vars = array("Error" => false, "MethodURL" => "admin/set_password/$lehrerID",
-                "InfoText" => "Passwort ändern für ".$lehrerInfo["kuerzel"]);
+                "InfoText" => "Passwort ändern für ".$lehrerInfo["kuerzel"]    ."<script>$(function(){\$('[name=password]').attr('disabled',true);});</script>");
       
-      if (isset($_POST["password"])) {
-        if (strlen($_POST["password"]) >= 7) {
-          if ($_POST["password"] == $_POST["wdh"]) {
-            $Lehrer->set_password($lehrerID, $_POST["password"]);
+      if (isset($_POST["new_password_1"])) {
+        if (strlen($_POST["new_password_1"]) >= 7) {
+          if ($_POST["new_password_1"] == $_POST["new_password_2"]) {
+            $Lehrer->set_password($lehrerID, $_POST["new_password_1"]);
             $this->template_vars["Inhalt"] = "Das Passwort wurde erfolgreich geändert.";
           } else {
             $template_vars["Error"] = "Passwort und Wiederholung müssen übereinstimmen. Das Passwort wurde nicht geändert.";

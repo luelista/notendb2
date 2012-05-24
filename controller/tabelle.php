@@ -14,6 +14,9 @@
     var $Kurs;
     var $SchuelerKurs;
     
+    /**
+     * Allgemeine Initialisierung der Kreutabellenansichten
+     **/
     function __construct() {
       parent::__construct();
       
@@ -36,11 +39,41 @@
       $this->require_datei();
     }
     
+    /**
+     * Einstellungsdialog, um Filteroptionen für Kreuztabelle festzulegen
+     **/
+    function einstellungen($target) {
+      if ($_POST["ok"]) {
+        $_SESSION["TabelleConfig"] = $_POST;
+        header("Location: ".URL_PREFIX."tabelle/$target?datei=".$this->DID);
+        return;
+      }
+      
+      $loadConfig = array();
+      $loadConfig["Config"] = $_SESSION["TabelleConfig"];
+      $loadConfig["MethodURL"] = "tabelle/einstellungen/".$target;
+      
+      $this->template_vars["Inhalt"] = 
+                  get_view("tabelle_anzeige_einst", $loadConfig);
+      
+      $this->display_layout();
+    }
+    
+    /**
+     * Anzeige einer Tabellenansicht um die Verbindung zwischen Schülern und Kursen einzutragen
+     **/
     function zuordnung() {
       $isTutor = $this->Session->isTutor($this->DID);
       
       $schueler = $this->Schueler->get_all();
-      $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
+      
+      if (!$_SESSION["TabelleConfig"]["zuordnung_filter_kurse"]) {
+        $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
+      } else {
+        $kurse = $this->Kurs->get_by_lid_with_lehrer_namen($this->Session->getUID());
+      }
+      
+      //$kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
       #var_dump($_POST);
       
       if($_POST["rsk_enable"]) {
@@ -54,7 +87,7 @@
       
       $kursPerms = array();
       foreach($kurse as $d) {
-        $kursPerms[$d["kuid"]] = $d["lehrer_perm"] > 0;
+        $kursPerms[$d["kuid"]] = $d["lehrer_perm"] > 0 || $_SESSION["TabelleConfig"]["zuordnung_filter_kurse"];
       }
       
       for($i = 0; $i < count($schueler); $i++) {
@@ -82,6 +115,9 @@
       $this->display_layout();
     }
     
+    /**
+     * forTest
+     **/
     function zuordnung_js() {
       
       $schueler = $this->Schueler->get_all();
@@ -104,16 +140,20 @@
       $this->display_layout();
     }
     
+    
+    /**
+     * Anzeige einer Tabellenansicht, um Noten und Fehlstunden der Schüler einzutragen
+     **/
     function noten() {
       //if($all!="alle")$all="meine";
       $isTutor = $this->Session->isTutor($this->DID);
       
       $schueler = $this->Schueler->get_all();
-      //if ($all=="alle") {
+      if (!$_SESSION["TabelleConfig"]["noten_filter_kurse"]) {
         $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
-      //} else {
-      //  $kurse = $this->Kurs->get_by_lid_with_lehrer_namen($this->Session->getUID());
-      //}
+      } else {
+        $kurse = $this->Kurs->get_by_lid_with_lehrer_namen($this->Session->getUID());
+      }
       
       if ($_POST["rsk"]) {
         foreach($_POST["rsk"] as $rid=>$d) {
@@ -123,14 +163,17 @@
       
       $kursPerms = array();
       foreach($kurse as $d) {
-        $kursPerms[$d["kuid"]] = $d["lehrer_perm"] > 0;
+        $kursPerms[$d["kuid"]] = $d["lehrer_perm"] > 0 || $_SESSION["TabelleConfig"]["noten_filter_kurse"];
       }
       
+      $schuelerb = array();
       for($i = 0; $i < count($schueler); $i++) {
         $this->DB->sql("SELECT rid,r_kuid,note,fehlstunden,fehlstunden_un FROM rel_schueler_kurs WHERE r_sid = %d", $schueler[$i]['sid']);
         $info = $this->DB->getlist();
+        $vis = !$_SESSION["TabelleConfig"]["noten_filter_schueler"];
         foreach($kurse as $d) $schueler[$i]['reldata'][$d['kuid']] = '--';
         foreach($info as $d) {
+          if ($kursPerms[$d['r_kuid']]) $vis=true;
           if ($isTutor || $kursPerms[$d['r_kuid']]) {
             $schueler[$i]['reldata'][$d['r_kuid']] = 
               '<nobr><input type="text" name="rsk['.$d['rid'].'][n]" class=n value="'.htmlspecialchars($d['note']).'" maxlength=2>'.
@@ -143,34 +186,50 @@
           }
           
         }
-        
+        //if (!$vis) $schueler[$i]['name'].='XX';
+        if ($vis) $schuelerb[]=$schueler[$i];
       }
       
-      $this->template_vars["Inhalt"] = 
+      $this->template_vars["Inhalt"] .= <<<STYLE
+      <style>
+      .kreuztabelle input { width:16px;border:1px solid #555;;padding:0;border-left-width:0;background:#eee }
+      .kreuztabelle input.n { border-left-width:1px;background:#fff }
+      #hilfe { display:none; position:absolute;right:20px;top:120px;border:1px solid blue;padding:10px;background:#eef;z-index:10;width:300px; }
+      </style>
+      <div id="hilfe">
+      
+      <h3>Hilfe:</h3>
+      Die drei Felder in jeder Zelle stehen für: Note, Fehlstunden gesamt, Fehlstunden unentschuldigt.
+      <br><br>
+      In der rechten Spalte wird die Summe der Fehlstunden gesamt und die Summe der Fehlstunden unentschuldigt für den
+      jeweilligen Schüler ausgegeben.
+      <br><br>
+      Nach dem Ausfüllen der Tabelle bitte auf "Eingegebene Daten speichern" klicken.
+      <br><br>
+      Unter "Ansicht einstellen..." können Sie auswählen, ob alle Schüler und Kurse angezeigt werden sollen oder nur die eigenen.
+      </div>
+      <input type="button" id="showHilfe" style="float:right;background:#ddd" value="  Hilfe  ">
+      <script>
+      $("#showHilfe").click(function() { $("#hilfe").toggle(); });
+      </script>
+STYLE;
+      $this->template_vars["Inhalt"] .= 
                   get_view("kreuztabelle", array(
-                      "Schueler" => $schueler,
+                      "Schueler" => $schuelerb,
                       "Kurse" => $kurse,
                       "MethodURL" => "tabelle/noten/$all"
                   ));
       
       $checked0=$_POST["display_all"]?"":"checked";
       $checked1=$_POST["display_all"]?"checked":"";
-      $this->template_vars["Inhalt"] .= <<<STYLE
-      <style>
-      .kreuztabelle input { width:16px;border:1px solid #555;;padding:0;border-left-width:0;background:#eee }
-      .kreuztabelle input.n { border-left-width:1px;background:#fff }
-      </style>
-      <br>
-      <h3>Hinweise:</h3>
-      Die drei Felder in jeder Zelle stehen für: Note, Fehlstunden gesamt, Fehlstunden unentschuldigt.
-      <br>
-      Nach dem Ausfüllen der Tabelle bitte oben rechts auf "Eingegebene Daten speichern" klicken.
-      <br><br>
-STYLE;
       
       $this->display_layout();
     }
     
+    
+    /**
+     * Erste Seite des Zeugnisdruckassistenten (Auswahl der Tutorengruppe und Festlegung der Exportpositionen)
+     **/
     function zeugnis() {
       $kurse = $this->Kurs->get_all_with_lehrer_namen_by_export_position();
       
@@ -184,17 +243,62 @@ STYLE;
     }
     
     
+    /**
+     * Zweite Seite des Zeugnisdruckassistenten (Vorschau)
+     **/
     function zeugnis_2() {
       $tutorengruppe = $_POST["kuid"];
       
-      foreach($_POST["export_position"] as $kuid=>$export_position) {
-        $this->DB->sql("UPDATE kurs SET export_position = %d WHERE kuid = %d", $export_position, $kuid);
-        $this->DB->execute();
+      if (isset($_POST["export_position"])) {
+        foreach($_POST["export_position"] as $kuid=>$export_position) {
+          $this->DB->sql("UPDATE kurs SET export_position = %d WHERE kuid = %d", $export_position, $kuid);
+          $this->DB->execute();
+        }
       }
       
       $schueler = $this->Schueler->get_all_by_kurs($tutorengruppe);
       $kurse = $this->Kurs->get_all_with_lehrer_namen_by_export_position();
       
+      foreach($kurse as $d) if($d["kuid"] == $tutorengruppe) $TutorengruppeName="$d[name] ($d[lehrer_namen])";
+      
+      if (count($schueler) == 0||count($kurse) == 0) {
+      $this->template_vars["Inhalt"] .= "<h2>Fehler:</h2> Ihre Auswahl hat eine leere Ausgabe ergeben.<p><input type='button' onclick='history.back()' value='   OK   '>";$this->display_layout();return;}
+      
+      for($i = 0; $i < count($schueler); $i++) {
+        $this->DB->sql("SELECT rid,r_kuid,note,fehlstunden,fehlstunden_un FROM rel_schueler_kurs WHERE r_sid = %d", $schueler[$i]['sid']);
+        $info = $this->DB->getlist();
+        foreach($kurse as $d) $schueler[$i]['reldata'][$d['kuid']] = '--';
+        
+        $fehlSumme = $unSumme = 0;
+        foreach($info as $d) {
+          $schueler[$i]['reldata'][$d['r_kuid']] = htmlspecialchars($d['note']);
+          $fehlSumme += $d['fehlstunden']; $unSumme += $d['fehlstunden_un'];
+        }
+        $schueler[$i]['summe'] = "$fehlSumme | $unSumme";
+        
+      }
+      
+      //load view
+      $this->template_vars["Inhalt"] .= 
+                  get_view("zeugnis_wizard_2", array(
+                      "Kuid" => $tutorengruppe,
+                      "Schueler" => $schueler,
+                      "TutorengruppeName" => $TutorengruppeName,
+                      "Kurse" => $kurse
+                  ));
+      
+      $this->display_layout();
+    }
+    
+    
+    /**
+     * Dritte Seite des Zeugnisdruckassistenten (Download der Druckdatei)
+     **/
+    function zeugnis_3() {
+      $tutorengruppe = $_POST["kuid"];
+      
+      $schueler = $this->Schueler->get_all_by_kurs($tutorengruppe);
+      $kurse = $this->Kurs->get_all_with_lehrer_namen_by_export_position();
       
       $POS_COUNT = 30;
       
@@ -207,7 +311,7 @@ STYLE;
       $globPositions = array();
       foreach($kurse as $d) {
         if ($globPositions[$d['export_position']]) $globPositions[$d['export_position']] = null;
-	else $globPositions[$d['export_position']] = ',"'.$d['name'].'","'.$d['art'].'","'.$d['wochenstunden'].'","--","--","--"';
+        else $globPositions[$d['export_position']] = ',"'.$d['name'].'","'.$d['art'].'","'.$d['wochenstunden'].'","--","--","--"';
       }
       
       for($i = 0; $i < count($schueler); $i++) {

@@ -7,6 +7,8 @@
    * @author     Max Weller <max.weller@teamwiki.net>
    **/
   
+  // (c) TeamWiki.net
+  
   /**
    * shorthand for htmlentities with correct params
    **/

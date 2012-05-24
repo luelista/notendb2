@@ -32,7 +32,7 @@
 
 <div id="nav">
 <div class="wrapper">
-  <div style="float:right">
+  <div class="sel">
     <?php if(isset($Dateien)): ?>
     Datei:
     <select onchange="location='?datei='+this.value">
@@ -51,7 +51,7 @@
     </li>
     <?php endforeach; ?>
   </ul>
-  <div style="clear: both"></div>
+  <div class="clear"></div>
 </div>
 </div>
 
@@ -65,11 +65,11 @@
 
 <div id="footer">
 <div class="wrapper">
-  Copyright (c) 2012 Max Weller, Moritz Willig
+  (c) 2012 Max Weller, Moritz Willig
 </div>
 </div>
 
-<!-- Copyright (c) 2012 MW, mw.wikilab.de -->
+<!-- Copyright (c) 2012 "MW" Max Weller, Moritz Willig, mw.wikilab.de -->
 
 </body>
 </html>

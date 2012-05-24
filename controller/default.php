@@ -24,11 +24,16 @@
       
     }
     
+    /**
+     * Willkommensseite mit Dateiauswahl
+     **/
     function index() {
       
       
+      $dateien = $this->Datei->get_all();
+      
       $this->template_vars["Inhalt"] = 
-                  get_view("welcome", array());
+                  get_view("welcome", array("Dateien" => $dateien));
       
       $this->display_layout();
     }
