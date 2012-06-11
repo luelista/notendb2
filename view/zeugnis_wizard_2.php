@@ -13,7 +13,8 @@ td, th { width: 3em; }
 td.firstcol, th.firstcol { width: 12em; }
 table { border-collapse:collapse; }
 table,th, td { border: 1px solid #888; }
-
+td {text-align:center}
+td.firstcol {text-align:left}
 .wrapper {
   max-width: inherit; padding: 5px 25px;
 }
