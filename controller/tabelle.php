@@ -329,7 +329,7 @@ STYLE;
         foreach($info as $d) {
           $positions[$schueler[$i]['reldata'][$d['r_kuid']][0]] = 
           $schueler[$i]['reldata'][$d['r_kuid']][1] .
-            ',"'.htmlspecialchars($d['note']).'"'.
+            ',"'.sprintf("%02d", $d['note']).'"'.
           $schueler[$i]['reldata'][$d['r_kuid']][3] ;
           $fehl+=$d["fehlstunden"]; $un+=$d["fehlstunden_un"];
         }
