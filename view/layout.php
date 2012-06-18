@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <title>db</title>
-<link rel="stylesheet" type="text/css" href="<?=URL_PREFIX?>view/style.css">
+<link rel="stylesheet" type="text/css" href="<?=URL_PREFIX?>content/style.css">
 <link rel='shortcut icon' href='http://mw.wikilab.de/favicon.png'/>
-<script src="<?= URL_PREFIX ?>view/jquery.js"></script>
+<script src="<?= URL_PREFIX ?>content/jquery.js"></script>
 </head>
 <body>
 
@@ -36,9 +36,9 @@
     <?php if(isset($Dateien)): ?>
     Datei:
     <select onchange="location='?datei='+this.value">
-    <option value="-1">Auswahl</option>
+    <option value="-1">Auswahl</option>    
     <?php foreach($Dateien as $d): ?>
-    <option value=<?= $d["did"] . ($d["did"] == $DID ? " selected" : "") ?>><?= $d["descr"] ?></option>
+    <option value=<?= $d["did"] . ($d["did"] == $DID ? " selected" : "") ?>><?= $d["descr"] ?><?=(($d["tutor"])?"[".$d["tutor"]."]":"")?></option>
     <?php endforeach; ?>
     </select>
     <?php endif; ?>

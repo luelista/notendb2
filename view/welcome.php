@@ -9,14 +9,14 @@ Klicken Sie anschließend auf einen Menüpunkt.</p>
 <h3>Datei auswählen ...</h3>
 
 <table width=400>
-<tr><th>Jahr</th><th>Hj.</th><th>Schulform</th><th>Stufe</th><th>Tutor</th><th>Aktion</th></tr>
+<tr><th>Jahr</th><th>Hj.</th><th>Schulform</th><th>Stufe</th><th></th><th>Aktion</th></tr>
 <?php foreach($Dateien as $d): ?>
 <tr>
 <td><?= $d["jahr"] ?></td>
 <td><?= $d["hj"] ?></td>
 <td><?= $d["schulform"] ?></td>
 <td><?= $d["stufe"] ?></td>
-<td><?= $d["tutor"] ?></td>
+<td><?= $d["tutor"] ? "<b style=color:green>TUTOR</b>" : "" ?></td>
 <td><a href="<?= URL_PREFIX ?>kurs/view?datei=<?= $d["did"] ?>">Datei öffnen</a></td>
 </tr>
 <?php endforeach; ?>

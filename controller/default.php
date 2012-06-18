@@ -28,8 +28,8 @@
      * Willkommensseite mit Dateiauswahl
      **/
     function index() {
-      $dateien = $this->Datei->get_all("jahr ASC, hj ASC, Stufe DESC");
-      for ($i=0; $i<count($dateien); $i++) { $dateien[$i]["tutor"]=$this->Session->isTutor($dateien[$i]["did"])?"Ja":"-"; }
+      $dateien = $this->Datei->get_all("jahr DESC, hj DESC, Stufe DESC");
+      for ($i=0; $i<count($dateien); $i++) { $dateien[$i]["tutor"]=$this->Session->isTutor($dateien[$i]["did"]); }
       
       $this->template_vars["Inhalt"] = 
                   get_view("welcome", array("Dateien" => $dateien));

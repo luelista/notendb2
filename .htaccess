@@ -3,7 +3,7 @@
 RewriteEngine On
 
 
-RewriteRule ^view/ - [L]
+RewriteRule ^content/ - [L]
 
 # alle nicht abgefangenen -> pageout.php
 RewriteCond %{ENV:REDIRECT_STATUS} ^$

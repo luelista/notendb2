@@ -60,6 +60,7 @@
 }
 h2 { margin: 0; padding-right: 10px; }
 #footer { display: none; }
+input.errord { background: #ff9999 !important; }
 </style>
 
 <script>
@@ -74,8 +75,21 @@ h2 { margin: 0; padding-right: 10px; }
     }
     $(window).resize(onResizeTab);
     var formSent = false, formDirty = false;
-    $("form").submit(function() { formSent = true } );
-    $("input").change(function() { formDirty = true } );
+    $("form").submit(function() {
+      var invalidNoten = false;
+      $("input.n").each(function() { if ((!is_int($(this).val()) || parseInt($(this).val()) < 0 || parseInt($(this).val()) > 15)) { invalidNoten=true;$(this).addClass("errord"); } else {$(this).removeClass("errord");} });
+      
+      if (invalidNoten) { alert("Bitte geben Sie nur Noten zwischen 0 und 15 ein."); return false; }
+      formSent = true
+    } );
+    function check_inp(i) {
+      if ($(i).val() == "" || !is_int($(i).val())) $(i).addClass("errord"); else $(i).removeClass("errord");
+    }
+    $("input[type=text], input[type=checkbox]").change(function() {
+      check_inp(this);
+      formDirty = true; $("input[name=save]").css("background", "#ff4444");
+    } ).each(function() { check_inp(this); });
+    
     $(window).bind("beforeunload", function() {
       if (formDirty && !formSent) {
         e = e || window.event;
@@ -118,6 +132,12 @@ h2 { margin: 0; padding-right: 10px; }
       calcCount();
     }
   });
+  function is_int(value){
+    for (i = 0 ; i < value.length ; i++) {
+      if ((value.charAt(i) < '0') || (value.charAt(i) > '9')) return false 
+    }
+    return true;
+  }
   
 </script>
 
