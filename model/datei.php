@@ -19,7 +19,20 @@
       $this->sql("SELECT {$this->idcol}, CONCAT('[', schulform, stufe, '] ', jahr, '-', hj) AS descr FROM {$this->table} ORDER BY schulform,stufe,jahr,hj");
       return $this->getlist();
     }
-    
+    /*
+    function get_by_id($id) {
+      $resultSet = parent::get_by_id($id);
+      if (!$resultSet) {
+        $this->template_vars["Inhalt"] = 
+                  get_view("error_no_datei_selected", array());
+      
+        $this->display_layout();
+        
+        exit;
+      }
+      return $resultSet;
+    }
+    */
     function set($did, $jahr, $hj, $schulform, $stufe) {
       if ($did === null) {
         parent::sql("INSERT INTO {$this->table} (jahr, hj, schulform, stufe)

@@ -49,7 +49,7 @@
     }
     
     function require_datei() {
-      if ($this->DID == -1) {
+      if ($this->DID == -1 || load_model("datei")->get_by_id($this->DID) == null) {
         $this->template_vars["Inhalt"] = 
                   get_view("error_no_datei_selected", array());
       

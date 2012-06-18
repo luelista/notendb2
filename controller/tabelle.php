@@ -52,6 +52,7 @@
       $loadConfig = array();
       $loadConfig["Config"] = $_SESSION["TabelleConfig"];
       $loadConfig["MethodURL"] = "tabelle/einstellungen/".$target;
+      $loadConfig["MeineKurse"] = $this->Kurs->get_by_lid_with_lehrer_namen($this->Session->getUID());
       
       $this->template_vars["Inhalt"] = 
                   get_view("tabelle_anzeige_einst", $loadConfig);
@@ -153,6 +154,11 @@
         $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
       } else {
         $kurse = $this->Kurs->get_by_lid_with_lehrer_namen($this->Session->getUID());
+        if ($_SESSION["TabelleConfig"]["noten_filter_kurse"] == 2 && $_SESSION["TabelleConfig"]["noten_filter_kurse_kuid"]) {
+          foreach($kurse as $d) {
+            if ($d["kuid"] == $_SESSION["TabelleConfig"]["noten_filter_kurse_kuid"]) { $kurse = array($d); break; }
+          }
+        }
       }
       
       if ($_POST["rsk"]) {
