@@ -33,7 +33,7 @@
       $list = $this->Schueler->get_all();
       
       $this->template_vars["Inhalt"] = 
-                  get_view("schueler_list", array("Liste" => $list, "isTutor" => $this->Session->isTutor($this->DID)));
+                  get_view("schueler_list", array("Liste" => $list, "isTutor" => $this->Session->isTutor($this->DID) || $this->Session->isAdmin()));
       
       $this->display_layout();
     }

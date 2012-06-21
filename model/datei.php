@@ -15,6 +15,22 @@
           "jahr", "hj", "schulform", "stufe"
       );
     
+    function k_set_editlock($kuid, $lid) {
+      $this->sql("UPDATE kurs SET editlocked_by_lid = %d, editlocked_since = NOW() WHERE kuid = %d AND editlocked_by_lid = 0", $lid, $kuid);
+      $this->execute();
+      return $this->affectedRows() > 0;
+    }
+    
+    function k_clear_editlocks_by_lid($lid) {
+      $this->sql("UPDATE kurs SET editlocked_by_lid = 0 WHERE editlocked_by_lid = %d", $lid);
+      $this->execute();
+    }
+    function k_clear_all_editlocks() {
+      $this->sql("UPDATE kurs SET editlocked_by_lid = 0 ");
+      $this->execute();
+    }
+    
+    
     function get_ordered_list() {
       $this->sql("SELECT {$this->idcol}, CONCAT('[', schulform, stufe, '] ', jahr, '-', hj) AS descr FROM {$this->table} ORDER BY schulform,stufe,jahr,hj");
       return $this->getlist();

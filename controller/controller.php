@@ -16,6 +16,8 @@
     function __construct() {
       $this->Session = load_model("session");
       
+      $this->template_vars["ScriptInfo"] = array("LoggedInUser" => $this->Session->getUid());
+      
       $this->DID = isset($_GET["datei"]) && intval($_GET["datei"]) > 0 ? intval($_GET["datei"]) : -1;
       set_view_var("DID", $this->DID);
       set_view_var("IsAdmin", $this->Session->isAdmin());
@@ -28,13 +30,23 @@
     
     function load_menu() {
       $this->template_vars["Main_Menu"] = array(
-        "kurs/view"             => "Liste der Kurse",
-        "schueler/view"         => "Schülerliste",
-        "tabelle/zuordnung"     => "Zuordnung",
-        "tabelle/noten"         => "Notenvergabe",
-        "tabelle/zeugnis"       => "Zeugnisdruck",
+        "kurs/view"                   => "<b>1. </b>Liste der Kurse",
+        "tabelle/zuordnung_view"      => "<b>2. </b>Zuordnung",
+        "tabelle/noten_view"          => "<b>3. </b>Notenvergabe",
+        
+        "schueler/view"               => "Schülerliste",
+        "tabelle/zeugnis"             => "Zeugnisdruck",
         // --temporarilyDisabled-- "offline/info"          => "Offline"
       );
+    }
+    
+    function die_with_error($errmes) {
+      $this->template_vars["Inhalt"] = 
+                  get_view("error_simple", array("Errmes" => $errmes));
+      
+      $this->display_layout();
+      
+      exit;
     }
     
     function display_layout() {
@@ -49,14 +61,22 @@
     }
     
     function require_datei() {
-      if ($this->DID == -1 || load_model("datei")->get_by_id($this->DID) == null) {
+      $DATEI = load_model("datei");
+      $datei = null;
+      if ($this->DID > -1) {
+        $datei = $DATEI->get_by_id($this->DID);
+      }
+      if ($datei == null) {
         $this->template_vars["Inhalt"] = 
                   get_view("error_no_datei_selected", array());
-      
         $this->display_layout();
         
         exit;
       }
+      
+      $this->template_vars["ScriptInfo"]["Datei"] = $datei;
+      $DATEI->k_clear_editlocks_by_lid($this->Session->getUid());
+      
     }
     
   }

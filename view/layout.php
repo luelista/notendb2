@@ -6,6 +6,9 @@
 <link rel="stylesheet" type="text/css" href="<?=URL_PREFIX?>content/style.css">
 <link rel='shortcut icon' href='http://mw.wikilab.de/favicon.png'/>
 <script src="<?= URL_PREFIX ?>content/jquery.js"></script>
+<script>
+  window.ScriptInfo = <?= json_encode($ScriptInfo) ?>;
+</script>
 </head>
 <body>
 

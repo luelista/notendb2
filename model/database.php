@@ -32,7 +32,7 @@
 	  var $structure=null;
 	  
     function read_ini() {
-			if (!$GLOBALS["DISABLE_TRACE"]) trace("Trying to read configuration from '{CONFIG_FILE}' ...");
+			if (!$GLOBALS["DISABLE_TRACE"]) trace("Trying to read configuration from '".CONFIG_FILE."' ...");
       DatabaseModel::$inifile = CONFIG_FILE;
       DatabaseModel::$settings = parse_ini_file(DatabaseModel::$inifile,true);
       DatabaseModel::$settings["Salt"]= DatabaseModel::$settings["Login"]["Salt"];

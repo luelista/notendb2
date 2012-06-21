@@ -52,3 +52,7 @@ th { text-align: left; }
   input { border: 0 !important; padding: 0; margin: 0; }
   .noprint { display: none }
 }
+
+div.success {
+  background: #afa; padding: 6px; border: 1px solid #292;
+}

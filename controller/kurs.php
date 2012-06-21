@@ -37,7 +37,9 @@
       $list = $this->Kurs->get_all_with_lehrer_namen();
       for($i = 0; $i < count($list); $i++) $list[$i]["rlk_set"] = strpos(",".$list[$i]["lehrer_namen"].",", ",".$this->Session->getUser("name").",") !== false;
       
-      $this->template_vars["Inhalt"] = 
+      $this->template_vars["Inhalt"] =
+          ($_GET["saved"] ? "<div class='success'>Der Kurs wurde erfolgreich gespeichert.</div>" : "").
+          ($_GET["deleted"] ? "<div class='success'>Der Kurs wurde erfolgreich gelöscht.</div>" : "").
                   get_view("kurs_list", array("Liste" => $list));
       
       $this->display_layout();
@@ -46,7 +48,7 @@
     function delete() {
       $this->Kurs->delete($_POST["kuid"]);
       
-      header("Location: ".URL_PREFIX."kurs/view?datei=".$this->DID);
+      header("Location: ".URL_PREFIX."kurs/view?deleted=true&datei=".$this->DID);
       
     }
     
@@ -60,6 +62,9 @@
         $this->LehrerKurs->deleteAllByKuid($id);
         if (is_array($_POST["rlk_list"])) foreach($_POST["rlk_list"] as $d) $this->LehrerKurs->addByRel($d, $id);
         if ($_POST["e"]["saveAndNew"]) $id = null; else $kuid = $id;
+        
+        header("Location: ".URL_PREFIX."kurs/view?saved=true&datei=" . $this->DID);
+        exit;
       }
       
       $Lehrer = load_model("lehrer");       $Lehrer->DID = $this->DID;

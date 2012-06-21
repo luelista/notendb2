@@ -161,6 +161,15 @@
     }
     
     
+    function su($lehrerID) {
+      $Lehrer = load_model("lehrer");
+      $lehrerInfo = $Lehrer->get_by_id($lehrerID);
+      $this->Session->setLoggedIn($lehrerInfo, true);
+      
+      header("Location: ".URL_PREFIX."");
+      exit;
+    }
+    
     function set_password($lehrerID) {
       $this->require_login();
       $lehrerID = intval($lehrerID);

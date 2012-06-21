@@ -66,7 +66,7 @@
       unset($kurs["ktid"]);
       
       $this->template_vars["Inhalt"] = 
-                     get_view("simple_form", array(
+                     get_view("kurstemplate_edit", array(
                           "Data" => $kurs,
                           "Error" => false,
                           "MethodURL" => "kurstemplate/edit/$kuid"

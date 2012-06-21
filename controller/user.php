@@ -21,7 +21,7 @@
       
       if ($_POST["username"]) {
         $Lehrer = load_model("lehrer");
-        if ($user = $Lehrer->check_login($_POST["username"])) {
+        if ($user = $Lehrer->check_login(strtolower($_POST["username"]))) {
           $this->Session->setLoggedIn($user, true);
           header("Location: ".URL_PREFIX."");
           exit;

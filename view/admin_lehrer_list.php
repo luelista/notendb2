@@ -16,6 +16,7 @@
 <td><?= $d["anrede"] ?> <?= $d["vorname"] ?> <?= $d["name"] ?></td>
 <td><a href="<?= URL_PREFIX ?>admin/lehrer/<?= $d["lid"] ?>?datei=<?= $DID ?>">Bearbeiten</a></td>
 <td><a href="<?= URL_PREFIX ?>admin/set_password/<?= $d["lid"] ?>?datei=<?= $DID ?>">Passwort setzen</a></td>
+<td><a href="<?= URL_PREFIX ?>admin/su/<?= $d["lid"] ?>">S.U.</a></td>
 </tr>
 <?php endforeach; ?>
 </table>

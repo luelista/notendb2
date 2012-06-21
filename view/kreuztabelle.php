@@ -4,9 +4,9 @@
   font: status-bar;
 }
 .kreuztabelle th, .kreuztabelle tr.headrow th {
-  background: #aaa;
+  background: #aaa; vertical-align: top;
 }
-.kreuztabelle tr.footrow th, .kreuztabelle tr.footrow td { background: #444 !important; color: #fff; text-align: center; }
+.kreuztabelle tr.footrow th, .kreuztabelle tr.footrow td { background: #444 !important; color: #fff; text-align: center; font-weight: bold; }
 .kreuztabelle tr {
   background: #fafafa;
 }
@@ -43,6 +43,7 @@
   tr.headrow .firstcol {
     height: 24px;
   }
+  td { padding-left: 3px; }
   .kreuztabelle tr:hover th, .kreuztabelle tr:hover td { background: #afa !important; }
   .wrapper {
     max-width: inherit; padding: 5px 25px;
@@ -61,6 +62,15 @@
 h2 { margin: 0; padding-right: 10px; }
 #footer { display: none; }
 input.errord { background: #ff9999 !important; }
+.kreuztabelle tr th.editableColhdr {
+  background-image: url(<?=URL_PREFIX?>content/edit-22.png) !important;
+  background-repeat: no-repeat !important; background-position: right center !important;
+}
+.kreuztabelle tr th.editableColhdr a { display: block; height: 28px; color: #fff; text-decoration: none; }
+.kreuztabelle tr:hover th.editableColhdr a { color: #030; }
+.kreuztabelle tr th.editableColhdr:hover { background-color: #8e8!important; }
+.kreuztabelle tr th.editableColhdr a:hover { color: #090; text-decoration: underline; font-weight: bold; }
+
 </style>
 
 <script>
@@ -85,9 +95,12 @@ input.errord { background: #ff9999 !important; }
     function check_inp(i) {
       if ($(i).val() == "" || !is_int($(i).val())) $(i).addClass("errord"); else $(i).removeClass("errord");
     }
+    function makeDirty() {
+      formDirty = true; $("input[name=save]").css("background", "#ff4444");
+    }
     $("input[type=text], input[type=checkbox]").change(function() {
       check_inp(this);
-      formDirty = true; $("input[name=save]").css("background", "#ff4444");
+      makeDirty();
     } ).each(function() { check_inp(this); });
     
     $(window).bind("beforeunload", function() {
@@ -101,33 +114,34 @@ input.errord { background: #ff9999 !important; }
     });
     onResizeTab();
 
-    if (tabMode == "noten" || tabMode == "uebersicht") {
+    if (tabMode == "noten_view" || tabMode == "noten_edit" || tabMode == "uebersicht") {
       function calcFehlstd() {
         $("tr").each(function(el) {
           var sumF = 0, sumU = 0;
           $(this).find("input.f").each(function() { sumF += +$(this).val(); });
-	  $(this).find("input.u").each(function() { sumU += +$(this).val(); });
-	
-	  $(this).find("span.f").each(function() { sumF += +$(this).text(); });
+          $(this).find("input.u").each(function() { sumU += +$(this).val(); });
+          
+          $(this).find("span.f").each(function() { sumF += +$(this).text(); });
           $(this).find("span.u").each(function() { sumU += +$(this).text(); });
-	  
-	  $(this).find(".fsResult").html("<nobr><b>" + sumF + " | " + sumU + "</b></nobr>");
+          
+          $(this).find(".fsResult").html("<nobr><b>" + sumF + " | " + sumU + "</b></nobr>");
         });
       }
       calcFehlstd();
       
       $("input.f, input.u").change(function() { calcFehlstd(); });
     }
-    if (tabMode == "zuordnung") {
+    if (tabMode == "zuordnung_view" || tabMode == "zuordnung_edit") {
       function calcCount() {
         $("td.cnt").each(function() {
           var cnt=0, id=$(this).attr("data-kuid");
           $("input[name^='rsk_enable['][name$='][" + id + "]']:checked").each(function(){cnt++});
+          $(".checked_" + id + "").each(function(){cnt++});
           $(this).html(cnt);
         });
       }
       $("input[type=checkbox]").each(function() { var a=this;$(a).closest("td").click(function(e) {
-        if(e.target.tagName!="INPUT")a.checked=!a.checked; calcCount();
+        if(e.target.tagName!="INPUT")a.checked=!a.checked; calcCount(); makeDirty();
       });});
       calcCount();
     }
@@ -148,13 +162,15 @@ input.errord { background: #ff9999 !important; }
   <p><?= $Error ?></p>
   <?php endif; ?>
   
+  <?php if(!$ReadOnly): ?>
   <form action="<?=URL_PREFIX?><?= $MethodURL ?>?datei=<?= $DID ?>" method="post">
 
-<input type="submit" name="save" value="     Eingegebene Daten speichern     " style="float:right;background: lightgreen;border-color: darkgreen" />
+  <input type="submit" name="save" value="     Eingegebene Daten speichern     " style="float:right;background: lightgreen;border-color: darkgreen" />
+  
+  <input type="button" value="     Abbrechen     " style="float:right;background:#ddd;margin-right:5px;" onclick='history.back()' />
+  <?php endif; ?>
 
-<input type="button" value="     Ansicht einstellen...     " style="float:right;background:#ddd" onclick='location.href="<?= URL_PREFIX ?>tabelle/einstellungen/<?= $controller_function ?>?datei=<?= $DID ?>"' />
-
-<h2>Kreuztabelle ansehen/bearbeiten</h2>
+<h2><?= $Heading ? $Heading : "Kreuztabelle ansehen/bearbeiten" ?></h2>
 
 
 <div class="tableContainer resizeMe">
@@ -171,7 +187,8 @@ input.errord { background: #ff9999 !important; }
 <th class=boguscol>&nbsp;</th>
 <!-- Lehrer -->
 <?php $colodd = false;$lastkurs=""; foreach($Kurse as $e): if($e["name"]!=$lastkurs){$lastkurs=$e["name"];$colodd=!$colodd;} ?>
-<th class="<?= $colodd ? "colodd" : "" ?>"><?= $e["art"] ?>&nbsp;|&nbsp;<?= $e["wochenstunden"] ?></th>
+<th class="<?= $colodd ? "colodd" : "" ?> <?= $e["head_lnk"] ? 'editableColhdr"><a href="'.$e["head_lnk"] : '' ?>"><?= $e["art"] ?>&nbsp;|&nbsp;<?= $e["wochenstunden"] ?>
+</th>
 <?php endforeach; ?>
 <!-- Ende Lehrer -->
 
@@ -209,6 +226,21 @@ for($i = 0; $i < count($Kurse);){
 <th>-</th>
 
 </tr>
+
+  <?php if($controller_function == "noten_edit"): ?>
+  <tr class="headrow Hlehrer">
+  <th style=text-align:right class=firstcol>&nbsp;</th>
+  <th class=boguscol>&nbsp;</th>
+  <!-- Lehrer -->
+  <?php $colodd = false;$lastkurs=""; foreach($Kurse as $e): ?>
+  <th class="<?= $colodd ? "colodd" : "" ?>">
+  <nobr><input type="text" class="desc" value="Note" disabled><input type="text" class="desc" value="Fehl." disabled><input type="text" class="desc" value="Unent." disabled></nobr>
+  </th>
+  <?php endforeach; ?>
+  <!-- Ende Lehrer -->
+  <th>-</th>
+  </tr>
+  <?php endif; ?>
 <?php endif; ?>
 
 
@@ -223,7 +255,7 @@ for($i = 0; $i < count($Kurse);){
 <td class="<?= $colodd ? "colodd" : "" ?>"><?= $d['reldata'][$ddd['kuid']] ?></td>
 <?php endforeach; ?>
 
-<td class="fsResult">-</td>
+<td class="fsResult"></td>
 
 </tr>
 <!-- Ende Schueler -->
@@ -249,5 +281,6 @@ for($i = 0; $i < count($Kurse);){
 </div></div>
 <div style="height:500px" class="resizeMe"></div>
 
+  <?php if(!$ReadOnly): ?>
   </form>
-  
+  <?php endif; ?>  
