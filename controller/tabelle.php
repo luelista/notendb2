@@ -60,61 +60,6 @@
       $this->display_layout();
     }
     
-    /**
-     * Anzeige einer Tabellenansicht um die Verbindung zwischen Schülern und Kursen einzutragen
-     ** /
-    function zuordnung() {
-      $isTutor = $this->Session->isTutor($this->DID);
-      
-      $schueler = $this->Schueler->get_all();
-      
-      if (!$_SESSION["TabelleConfig"]["zuordnung_filter_kurse"]) {
-        $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
-      } else {
-        $kurse = $this->Kurs->get_by_lid_with_lehrer_namen($this->Session->getUID());
-      }
-      
-      //$kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
-      #var_dump($_POST);
-      
-      if($_POST["rsk_enable"]) {
-        foreach($_POST["rsk_enable"] as $sid => $d)
-          foreach($d as $kuid => $stat)
-            if ($stat == "Add")
-              $this->SchuelerKurs->addByRelEmpty($sid, $kuid);
-            elseif ($stat == "Del") 
-              $this->SchuelerKurs->deleteByRel($sid, $kuid);
-      }
-      
-      $kursPerms = array();
-      foreach($kurse as $d) {
-        $kursPerms[$d["kuid"]] = $d["lehrer_perm"] > 0 || $_SESSION["TabelleConfig"]["zuordnung_filter_kurse"];
-      }
-      
-      for($i = 0; $i < count($schueler); $i++) {
-        $this->DB->sql("SELECT rid,r_kuid FROM rel_schueler_kurs WHERE r_sid = %d", $schueler[$i]['sid']);
-        $info = $this->DB->getlist(); #var_dump($info);
-        foreach($kurse as $d) {
-          $enabled="";
-          if (!$kursPerms[$d["kuid"]] && !$isTutor) $enabled="disabled";
-          $schueler[$i]['reldata'][$d['kuid']] = '<input type="checkbox" name="rsk_enable['.$schueler[$i]['sid'].']['.$d['kuid'].']" value="Add" '.$enabled.'>';
-        }
-        foreach($info as $d) {
-          $enabled="";
-          if (!$kursPerms[$d["r_kuid"]] && !$isTutor) $enabled="disabled";
-          $schueler[$i]['reldata'][$d['r_kuid']] = ($enabled?'':'<input type="hidden" name="rsk_enable['.$schueler[$i]['sid'].']['.$d['r_kuid'].']" value="Del">').'<input type="checkbox" name="rsk_enable['.$schueler[$i]['sid'].']['.$d['r_kuid'].']" value="Keep" checked '.$enabled.'>';
-        }
-      }
-      
-      $this->template_vars["Inhalt"] = 
-                  get_view("kreuztabelle", array(
-                      "Schueler" => $schueler,
-                      "Kurse" => $kurse,
-                      "MethodURL" => "tabelle/zuordnung"
-                  ));
-      
-      $this->display_layout();
-    }*/
     
     
     /**
@@ -246,87 +191,6 @@
     
     
     
-    
-    
-    
-    /**
-     * Anzeige einer Tabellenansicht, um Noten und Fehlstunden der Schüler einzutragen
-     **  /
-    function noten() {
-      //if($all!="alle")$all="meine";
-      $isTutor = $this->Session->isTutor($this->DID);
-      
-      $schueler = $this->Schueler->get_all();
-      if (!$_SESSION["TabelleConfig"]["noten_filter_kurse"]) {
-        $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
-      } else {
-        $kurse = $this->Kurs->get_by_lid_with_lehrer_namen($this->Session->getUID());
-        if ($_SESSION["TabelleConfig"]["noten_filter_kurse"] == 2 && $_SESSION["TabelleConfig"]["noten_filter_kurse_kuid"]) {
-          foreach($kurse as $d) {
-            if ($d["kuid"] == $_SESSION["TabelleConfig"]["noten_filter_kurse_kuid"]) { $kurse = array($d); break; }
-          }
-        }
-      }
-      
-      if ($_POST["rsk"]) {
-        foreach($_POST["rsk"] as $rid=>$d) {
-          $this->SchuelerKurs->set($rid, array("note" => $d["n"], "fehlstunden" => $d["f"], "fehlstunden_un" => $d["u"]));
-        }
-      }
-      
-      $kursPerms = array();
-      foreach($kurse as $d) {
-        $kursPerms[$d["kuid"]] = $d["lehrer_perm"] > 0 || $_SESSION["TabelleConfig"]["noten_filter_kurse"];
-      }
-      
-      $schuelerb = array();
-      for($i = 0; $i < count($schueler); $i++) {
-        $this->DB->sql("SELECT rid,r_kuid,note,fehlstunden,fehlstunden_un FROM rel_schueler_kurs WHERE r_sid = %d", $schueler[$i]['sid']);
-        $info = $this->DB->getlist();
-        $vis = !$_SESSION["TabelleConfig"]["noten_filter_schueler"];
-        foreach($kurse as $d) $schueler[$i]['reldata'][$d['kuid']] = '--';
-        foreach($info as $d) {
-          if ($kursPerms[$d['r_kuid']]) $vis=true;
-          if ($isTutor || $kursPerms[$d['r_kuid']]) {
-            $schueler[$i]['reldata'][$d['r_kuid']] = 
-              '<nobr><input type="text" name="rsk['.$d['rid'].'][n]" class=n value="'.htmlspecialchars($d['note']).'" maxlength=2>'.
-              '<input type="text" name="rsk['.$d['rid'].'][f]" class=f value="'.htmlspecialchars($d['fehlstunden']).'">'.
-              '<input type="text" name="rsk['.$d['rid'].'][u]" class=u value="'.htmlspecialchars($d['fehlstunden_un']).'"></nobr>';
-          } else {
-            $schueler[$i]['reldata'][$d['r_kuid']] = 
-              '<nobr>'.htmlspecialchars($d['note']).' | <span class=f>'.htmlspecialchars($d['fehlstunden']).'</span> | <span class=u>'.htmlspecialchars($d['fehlstunden_un']).'</span></nobr>';
-            
-          }
-          
-        }
-        //if (!$vis) $schueler[$i]['name'].='XX';
-        if ($vis) $schuelerb[]=$schueler[$i];
-      }
-      
-      $this->template_vars["Inhalt"] .= get_view("kreuztabelle_noten_helptext", array());
-      
-      
-      $this->template_vars["Inhalt"] .= 
-                  get_view("kreuztabelle", array(
-                      "Schueler" => $schuelerb,
-                      "Kurse" => $kurse,
-                      "MethodURL" => "tabelle/noten/$all"
-                  ));
-      
-      $checked0=$_POST["display_all"]?"":"checked";
-      $checked1=$_POST["display_all"]?"checked":"";
-      
-      $this->display_layout();
-    }
-     */
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * Anzeige einer Tabellenansicht, um Noten und Fehlstunden der Schüler einzutragen
      **/
@@ -334,23 +198,29 @@
       
       $isTutor = $this->Session->isTutor($this->DID);
       
-      $schueler = $this->Schueler->get_all();
+      $kfilter = false;
       if ($_GET["viewMode"] == "alle_Kurse") {
+        $schueler = $this->Schueler->get_all();
         $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
       } else if ($_GET["viewMode"] == "Tutorengruppe") {
+        $tut_gruppen = $this->Kurs->get_by_lid_with_lehrer_namen($this->Session->getUID());
+        $tut_gruppe = isset($_GET["t_grp"]) ? intval($_GET["t_grp"]) : $tut_gruppen[0]["kuid"];
+        $schueler = $this->Schueler->get_all_by_kurs($tut_gruppe);
         $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
+        $kfilter = array();
       } else {
+        $schueler = $this->Schueler->get_all();
         $kurse = $this->Kurs->get_by_lid_with_lehrer_namen($this->Session->getUID());
         for($i = 0; $i < count($kurse); $i++) $kurse[$i]["lehrer_perm"] = 1;
         $_GET["viewMode"] = "meine_Kurse";
       }
-      
+      /*
       if ($_POST["rsk"]) {
         foreach($_POST["rsk"] as $rid=>$d) {
           $this->SchuelerKurs->set($rid, array("note" => $d["n"], "fehlstunden" => $d["f"], "fehlstunden_un" => $d["u"]));
         }
       }
-      
+      */
       for($i = 0; $i < count($kurse); $i++) {
         $kurse[$i]["head_lnk"] =
           ($kurse[$i]["lehrer_perm"] > 0 || $isTutor) ?
@@ -359,13 +229,14 @@
       }
       
       $schuelerb = array();
+      
       for($i = 0; $i < count($schueler); $i++) {
         $this->DB->sql("SELECT rid,r_kuid,note,fehlstunden,fehlstunden_un FROM rel_schueler_kurs WHERE r_sid = %d", $schueler[$i]['sid']);
         $info = $this->DB->getlist();
         $vis = false;//!$_SESSION["TabelleConfig"]["noten_filter_schueler"];
         foreach($kurse as $d) $schueler[$i]['reldata'][$d['kuid']] = '--';
         foreach($info as $d) {
-          $vis=true;
+          if ($kfilter !== false) $kfilter[$d['r_kuid']] = 1; $vis=true;
           $schueler[$i]['reldata'][$d['r_kuid']] = 
             '<nobr>'.htmlspecialchars($d['note']).' | <span class=f>'.htmlspecialchars($d['fehlstunden']).'</span> | <span class=u>'.htmlspecialchars($d['fehlstunden_un']).'</span></nobr>';
           
@@ -374,7 +245,15 @@
         if ($vis) $schuelerb[]=$schueler[$i];
       }
       
-      $this->template_vars["Inhalt"] .= get_view("kreuztabelle_noten_viewselector", array());
+      if ($kfilter !== false) {
+        $kurseb = array();
+        foreach($kurse as $d) if($kfilter[$d['kuid']]) $kurseb[] = $d;
+        $kurse = $kurseb;
+      }
+      
+      $this->template_vars["Inhalt"] .= get_view("kreuztabelle_noten_viewselector", array(
+                      "TutorengruppenListe" => $tut_gruppen
+                      ));
       //$this->template_vars["Inhalt"] .= get_view("kreuztabelle_noten_helptext", array());
       
       
