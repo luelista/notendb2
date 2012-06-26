@@ -1,4 +1,11 @@
 
+<div style="float:right;width:160px;padding-left: 10px; border-left: 1px solid #bbb;">
+  Sonderfunktionen:<br><br>
+  
+  <a href="<?= URL_PREFIX ?>statistics/latinum?datei=<?= $DID ?>">Schüler mit Latinum exportieren  </a>
+  
+</div>
+
 <h2>Zeugnisdruck - Schritt 1: Tutorengruppe wählen</h2>
 
 
