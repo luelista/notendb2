@@ -30,6 +30,11 @@
   //    Set to:     '/noten_db'
   define('URL_PREFIX',     '/notendb2/');
 
+  // R o o t    P a s s w o r d
+  // -> the password to login as user "root"
+  // -> YOU NEED TO SET THIS FOR FIRST LOGIN
+  define('ROOT_PASW',      'please choose root password');
+
   // P a t h   t o   t h e   d a t a b a s e   c o n f i g u r a t i o n
   // f i l e
   // -> may be relative to ROOT

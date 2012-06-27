@@ -25,7 +25,7 @@
 @media screen {
   .kreuztabelle tr th.firstcol {
     position: absolute; width: 140px; overflow: hidden; padding: 3px 5px;
-    background: #bbd;
+    background: #bbd; margin-left: -5px; border-right: 6px solid white;
   }
   .kreuztabelle tr.odd th.firstcol { background: #99b; }
   .kreuztabelle .boguscol {
@@ -38,7 +38,7 @@
     height: 19px;
   }
   tr.headrow, tr.headrow td {
-    height: 30px;
+    height: 30px; 
   }
   tr.headrow .firstcol {
     height: 24px;

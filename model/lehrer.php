@@ -30,6 +30,17 @@
     function check_login($username) {
       $entered_password_hash = "";
       
+      // -> check if user is root and handle differently because root password is 
+      //    not written to database for security reasons
+      // -> also, this makes it impossible to change root passw. via web interface
+      if ($username == "root") {
+        if ($_POST["password"] == ROOT_PASW) {
+          return array("kuerzel" => "root", "is_admin" => 1);
+        } else {
+          return false;
+        }
+      }
+      
       // on login, check the entered password
       if (isset($_POST["password"])) {
         $entered_password_hash = $this->hash($_POST["password"], 1, $username);

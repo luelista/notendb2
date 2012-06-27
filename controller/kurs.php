@@ -102,6 +102,31 @@
       $this->display_layout();
       
     }
+    
+    function copy_1() {
+      
+      $this->template_vars["Inhalt"] = 
+                     get_view("kurs_copy_1", array("Dateien" => $this->template_vars["Dateien"]));
+      
+      $this->display_layout();
+      
+    }
+    
+    function copy_2() {
+      
+      $SourceDateiKurse = new KursModel();
+      $SourceDateiKurse->DID = $_POST["src_datei"];
+      
+      $kurse = $SourceDateiKurse->get_all_with_lehrer_namen();
+      //var_dump($kurse);
+      $this->template_vars["Inhalt"] = 
+                     get_view("kurs_copy_2", array("Kurse" => $kurse));
+      
+      $this->display_layout();
+      
+    }
+    
+    
   }
   
 ?>

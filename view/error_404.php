@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>login</title>
+<title>db</title>
 <link rel="stylesheet" type="text/css" href="<?=URL_PREFIX?>content/style.css">
 </head>
 <body>

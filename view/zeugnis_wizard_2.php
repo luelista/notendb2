@@ -30,12 +30,14 @@ td.firstcol {text-align:left}
 
 <thead>
 <tr class="headrow Hkursinfo">
-<th class=firstcol><b>Kurs/Lehrer</b></th>
+<th class=firstcol><b>Kurs/Lehrer</b><br><br>Schüler</th>
 <!-- Lehrer -->
 <?php foreach($Kurse as $e): ?>
 <th><div><?= $e["art"] ?>&nbsp;<?= $e["name"] ?><br><?= $e["lehrer_namen"] ?></div></th>
 <?php endforeach; ?>
 <!-- Ende Lehrer -->
+
+<th class=firstcol><br><b>Schüler</b></th>
 
 <th><div>Fehl | Unent.</div></th>
 
@@ -53,6 +55,8 @@ td.firstcol {text-align:left}
 <?php foreach($Kurse as $ddd): ?>
 <td><?= $d['reldata'][$ddd['kuid']] ?></td>
 <?php endforeach; ?>
+
+<th class=firstcol><?= $d["name"] ?>, <?= $d["vorname"] ?></th>
 
 <td><?= $d["summe"] ?></td>
 
@@ -89,6 +93,8 @@ Word-Seriendruck-Funktion laden, um daraus Zeugnisse zu generieren.
 
 <form action="<?= URL_PREFIX ?>tabelle/zeugnis_3?datei=<?= $DID ?>" method="post">
 
+<input type="hidden" name="exp_name" value="<?= $TutorengruppeName ?>">
 <input type="hidden" name="kuid" value="<?= $Kuid ?>">
-<input type="submit" name="export" value="  Daten Exportieren  ">
+<input type="submit" name="export" value="  Als CSV Exportieren  ">
+<input type="submit" name="export_xls" value="  Als Excel-Mappe Exportieren  ">
 </form>

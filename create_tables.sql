@@ -29,7 +29,7 @@ CREATE TABLE `datei` (
   `schulform` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
   `stufe` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`did`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -49,8 +49,10 @@ CREATE TABLE `kurs` (
   `thema` text COLLATE utf8_unicode_ci NOT NULL,
   `display_position` int(11) NOT NULL,
   `export_position` int(11) NOT NULL,
+  `editlocked_by_lid` int(11) NOT NULL,
+  `editlocked_since` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`kuid`)
-) ENGINE=MyISAM AUTO_INCREMENT=71 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=97 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,7 +75,7 @@ CREATE TABLE `kurs_template` (
   `display_position` int(11) NOT NULL,
   `export_position` int(11) NOT NULL,
   PRIMARY KEY (`ktid`)
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,9 +100,8 @@ CREATE TABLE `lehrer` (
   `lastlogin_from` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`lid`),
   UNIQUE KEY `kuerzel` (`kuerzel`)
-) ENGINE=MyISAM AUTO_INCREMENT=343 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=344 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
 
 --
 -- Table structure for table `rel_lehrer_kurs`
@@ -115,7 +116,7 @@ CREATE TABLE `rel_lehrer_kurs` (
   `r_lid` bigint(20) NOT NULL,
   PRIMARY KEY (`rid`),
   UNIQUE KEY `schuljahr` (`r_kuid`,`r_lid`)
-) ENGINE=MyISAM AUTO_INCREMENT=100 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=157 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,7 +136,7 @@ CREATE TABLE `rel_schueler_kurs` (
   `kommentar` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`rid`),
   UNIQUE KEY `schuljahr` (`r_sid`,`r_kuid`)
-) ENGINE=MyISAM AUTO_INCREMENT=393 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=770 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -162,7 +163,7 @@ CREATE TABLE `schueler` (
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`sid`),
   KEY `did` (`did`)
-) ENGINE=MyISAM AUTO_INCREMENT=456 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=500 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,5 +180,14 @@ CREATE TABLE `tutor` (
   `is_tutor` tinyint(4) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
--- Dump completed on 2012-05-11 10:28:23
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2012-06-26  8:40:27

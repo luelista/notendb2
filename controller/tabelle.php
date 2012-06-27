@@ -199,6 +199,7 @@
       $isTutor = $this->Session->isTutor($this->DID);
       
       $kfilter = false;
+      if (isset($_COOKIE["noten_viewMode"]) && !isset($_GET["viewMode"])) $_GET["viewMode"] = $_COOKIE["noten_viewMode"];
       if ($_GET["viewMode"] == "alle_Kurse") {
         $schueler = $this->Schueler->get_all();
         $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
@@ -214,6 +215,7 @@
         for($i = 0; $i < count($kurse); $i++) $kurse[$i]["lehrer_perm"] = 1;
         $_GET["viewMode"] = "meine_Kurse";
       }
+      setcookie("noten_viewMode", $_GET["viewMode"], time()+10000, "/");
       /*
       if ($_POST["rsk"]) {
         foreach($_POST["rsk"] as $rid=>$d) {
@@ -258,7 +260,7 @@
       
       
       $this->template_vars["Inhalt"] .=
-                  "<div style='float:right'>Tipp: Klicken Sie auf das Stift-Icon, um Noten zu vergeben.</div>".
+                  "<div style='float:right;font:status-bar'>Tipp: Klicken Sie auf das Stift-Icon, um Noten zu vergeben.</div>".
                   get_view("kreuztabelle", array(
                       "Schueler" => $schuelerb,
                       "Kurse" => $kurse,
@@ -422,15 +424,15 @@
       $POS_COUNT = 30;
       
       $output = "";
-      $output .= '"D_jahr","D_hj","D_stufe","Name","Geburtsdatum","KOM"';
-      for($i = 1; $i <= $POS_COUNT; $i++) $output .= ',"K_'.$i.'_Name","K_'.$i.'_Art","K_'.$i.'_WST","K_'.$i.'_Thema","K_'.$i.'_Note","K_'.$i.'_Lehrer","K_'.$i.'_Reserviert"';
+      $output .= '"D_jahr";"D_hj";"D_stufe";"Name";"Geburtsdatum";"KOM"';
+      for($i = 1; $i <= $POS_COUNT; $i++) $output .= ';"K_'.$i.'_Name";"K_'.$i.'_Art";"K_'.$i.'_WST";"K_'.$i.'_Thema";"K_'.$i.'_Note";"K_'.$i.'_Lehrer";"K_'.$i.'_Reserviert"';
       
-      $output .= ',"FEHL","UN"';
+      $output .= ';"FEHL";"UN"';
       
       $globPositions = array();
       foreach($kurse as $d) {
         if ($globPositions[$d['export_position']]) $globPositions[$d['export_position']] = null;
-        else $globPositions[$d['export_position']] = ',"'.$d['name'].'","'.$d['art'].'","'.$d['wochenstunden'].'","--","--","--"';
+        else $globPositions[$d['export_position']] = ';"'.$d['name'].'";"'.$d['art'].'";"'.$d['wochenstunden'].'";"--";"--";"--";"--"';
       }
       
       for($i = 0; $i < count($schueler); $i++) {
@@ -439,23 +441,23 @@
         
         foreach($kurse as $d) {
           $schueler[$i]['reldata'][$d['kuid']][0] = $d['export_position'];
-          $schueler[$i]['reldata'][$d['kuid']][1] = ',"'.$d['name'].'","'.$d['art'].'","'.$d['wochenstunden'].'","'.$d['thema'].'"';
+          $schueler[$i]['reldata'][$d['kuid']][1] = ';"'.$d['name'].'";"'.$d['art'].'";"'.$d['wochenstunden'].'";"'.$d['thema'].'"';
           $schueler[$i]['reldata'][$d['kuid']][2] = false;
-          $schueler[$i]['reldata'][$d['kuid']][3] = ',"'.$d['lehrer_namen'].'",""';
+          $schueler[$i]['reldata'][$d['kuid']][3] = ';"'.$d['lehrer_namen'].'";""';
         }
         $positions = array();
         $fehl = $un = 0;
         foreach($info as $d) {
           $positions[$schueler[$i]['reldata'][$d['r_kuid']][0]] = 
           $schueler[$i]['reldata'][$d['r_kuid']][1] .
-            ',"'.sprintf("%02d", $d['note']).'"'.
+            ';"'.sprintf("%02d", $d['note']).'"'.
           $schueler[$i]['reldata'][$d['r_kuid']][3] ;
           $fehl+=$d["fehlstunden"]; $un+=$d["fehlstunden_un"];
         }
         
         $dat = $this->Datei->get_by_id($this->DID);
-        $output .= "\r\n" . '"'. $dat["jahr"] .'","'.$dat["hj"].'","'.$dat["stufe"].'"';
-        $output .= ',"'.$schueler[$i]['vorname'].' '.$schueler[$i]['name'].'","'.$schueler[$i]['geburtsdatum'].'","'.$schueler[$i]['kommentar'].'"';
+        $output .= "\r\n" . '"'. $dat["jahr"] .'";"'.$dat["hj"].'";"'.$dat["stufe"].'"';
+        $output .= ';"'.$schueler[$i]['vorname'].' '.$schueler[$i]['name'].'";"'.$schueler[$i]['geburtsdatum'].'";"'.$schueler[$i]['kommentar'].'"';
         
         for($p = 1; $p <= $POS_COUNT; $p++) {
           //$output.= "[$j/ $p=".$schueler[$i]['reldata'][$kurse[$j]['kuid']][0]."]";
@@ -466,19 +468,32 @@
           //  $output .= ',"","","","","",""';
           //}
           if ($positions[$p]) $output .= $positions[$p];
-	  elseif ($globPositions[$p]) $output .= $globPositions[$p];
-          else $output .=  ',"--","--","--","--","--","--","--"';
+          elseif ($globPositions[$p]) $output .= $globPositions[$p];
+          else $output .=  ';"--";"--";"--";"--";"--";"--";"--"';
         }
         
-        $output .= ',"'.$fehl.'","'.$un.'"';
+        $output .= ';"'.$fehl.'";"'.$un.'"';
         
       }
       
-      //$this->template_vars["Inhalt"] = "<pre>" . $output . "</pre>";
-      //$this->display_layout();
-      header("Content-disposition: attachment; filename=\"output.csv\"");
-      header("Content-Type: text/plain");
-      echo $output;
+      if ($_POST["export"]) {
+      
+        //$this->template_vars["Inhalt"] = "<pre>" . $output . "</pre>";
+        //$this->display_layout();
+        header("Content-disposition: attachment; filename=\"$_POST[exp_name].csv\"");
+        header("Content-Type: text/plain");
+        echo $output;
+      } elseif ($_POST["export_xls"]) {
+        $tempName = "/srv/www/htdocs/notendb2/temp/export.txt";
+        $tempName2 = "/srv/www/htdocs/notendb2/temp/export.xls";
+        
+        file_put_contents($tempName, $output);
+        
+         shell_exec("java -jar /srv/www/include/MakeMeExcel.jar \"$_POST[exp_name]\" if \"$tempName\" of \"$tempName2\"");
+        header("Content-disposition: attachment; filename=\"$_POST[exp_name].xls\"");
+        header("Content-Type: application/vnd.ms-excel");
+        readfile($tempName2);
+      }
     }
     
     

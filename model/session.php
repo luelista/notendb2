@@ -46,14 +46,18 @@
       else return $_SESSION["user"];
     }
     
+    function isRoot() {
+      return $_SESSION["user"]["kuerzel"] == "root";
+    }
+    
     function isAdmin() {
-      return $_SESSION["user"]["is_admin"];
+      return $this->isRoot() || $_SESSION["user"]["is_admin"];
     }
     
     function isTutor($did, $lid = null) {
       $DB = load_model("database");
       if ($lid == null) $lid = $this->getUID();
-      return 1 == $DB->getsingle("SELECT COUNT(*) FROM tutor WHERE r_lid = %d AND r_did = %d", $lid, $did);
+      return $this->isRoot() || (1 == $DB->getsingle("SELECT COUNT(*) FROM tutor WHERE r_lid = %d AND r_did = %d", $lid, $did));
     }
     
     function getUID() {
