@@ -22,6 +22,13 @@ td.firstcol {text-align:left}
 
 <h2>Tutorengruppe: <?= $TutorengruppeName ?></h2>
 
+<form action="<?= URL_PREFIX ?>tabelle/zeugnis_preview_xls?datei=<?= $DID ?>" method="post" style="float:right">
+
+<input type="hidden" name="exp_name" value="<?= $TutorengruppeName ?> Übersicht">
+<input type="hidden" name="kuid" value="<?= $Kuid ?>">
+<input type="submit" name="export_xls" value="  Vorschau als Excel-Mappe exportieren  ">
+</form>
+
 <h2>Zeugnisdruck - Schritt 3: Vorschau</h2>
 
 

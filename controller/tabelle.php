@@ -497,6 +497,71 @@
     }
     
     
+    /**
+     * Dritte Seite des Zeugnisdruckassistenten (Download der Druckdatei)
+     **/
+    function zeugnis_preview_xls() {
+      $tutorengruppe = $_POST["kuid"];
+      
+      $schueler = $this->Schueler->get_all_by_kurs($tutorengruppe);
+      $kurse = $this->Kurs->get_all_with_lehrer_namen_by_export_position();
+      
+      $output = "";
+      $output .= '"Name";"Geburtsdatum"';
+      
+      $globPositions = array();
+      foreach($kurse as $d) {
+        $output .= ';"'.$d['art'].' '.$d['name'].' ('.$d['lehrer_namen'].')"';
+      }
+      
+      $output .= ';"Fehlstunden Gesamt";"Fehlstunden Unentschuldigt"';
+      
+      for($i = 0; $i < count($schueler); $i++) {
+        $this->DB->sql("SELECT rid,r_kuid,note,fehlstunden,fehlstunden_un FROM rel_schueler_kurs WHERE r_sid = %d", $schueler[$i]['sid']);
+        $info = $this->DB->getlist();
+        
+        foreach($kurse as $d) {
+          $schueler[$i]['reldata'][$d['kuid']][0] = $d['export_position'];
+          $schueler[$i]['reldata'][$d['kuid']][1] = '--';
+          $schueler[$i]['reldata'][$d['kuid']][2] = false;
+          $schueler[$i]['reldata'][$d['kuid']][3] = ';"'.$d['lehrer_namen'].'";""';
+        }
+        $positions = array();
+        $fehl = $un = 0;
+        foreach($info as $d) {
+          $schueler[$i]['reldata'][$d['r_kuid']][1] = sprintf("%02d", $d['note']);
+          $positions[$schueler[$i]['reldata'][$d['r_kuid']][0]] = 
+          $schueler[$i]['reldata'][$d['r_kuid']][1] .
+            ';"'.sprintf("%02d", $d['note']).'"'.
+          $schueler[$i]['reldata'][$d['r_kuid']][3] ;
+          $fehl+=$d["fehlstunden"]; $un+=$d["fehlstunden_un"];
+        }
+        
+        $dat = $this->Datei->get_by_id($this->DID);
+        $output .= "\r\n";
+        $output .= '"'.$schueler[$i]['vorname'].' '.$schueler[$i]['name'].'";"'.$schueler[$i]['geburtsdatum'].'"';
+        
+        foreach($schueler[$i]['reldata'] as $kuid => $info) {
+          $output .=  ';"'.$info[1].'"';
+        }
+        
+        $output .= ';"'.$fehl.'";"'.$un.'"';
+        
+      }
+      
+        $tempName = "/srv/www/htdocs/notendb2/temp/export.txt";
+        $tempName2 = "/srv/www/htdocs/notendb2/temp/export.xls";
+        
+        file_put_contents($tempName, $output);
+        
+         shell_exec("java -jar /srv/www/include/MakeMeExcel.jar \"$_POST[exp_name]\" if \"$tempName\" of \"$tempName2\"");
+        header("Content-disposition: attachment; filename=\"$_POST[exp_name].xls\"");
+        header("Content-Type: application/vnd.ms-excel");
+        readfile($tempName2);
+      
+    }
+    
+    
   }
   
 ?>
