@@ -50,6 +50,7 @@
     
     <tr><td>Anzeigeposition: </td><td><input type="input" name="e[display_position]" value="<?= htmlspecialchars($Data["display_position"]) ?>"></td></tr>
     <tr><td>Exportposition: </td><td><input type="input" name="e[export_position]" value="<?= htmlspecialchars($Data["export_position"]) ?>"></td></tr>
+    <tr><td>Fachrichtung: </td><td><input type="input" name="e[fachrichtung]" value="<?= htmlspecialchars($Data["fachrichtung"]) ?>"></td></tr>
     
   </table>
   
@@ -67,7 +68,8 @@
   <?php endforeach; ?>
   
   </select>
-  
+  <br>
+  Um mehrere Lehrer auszuwählen "Strg" auf der Tastatur gedrückt halten.
   </td><td valign=top>
   
   <h3>Zugeordnete&nbsp;Schüler</h3>

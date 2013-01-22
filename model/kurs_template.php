@@ -22,7 +22,8 @@
 			"wochenstunden" => "'%s'",
 			"thema" => "'%s'",
 			"display_position" => "%d",
-			"export_position" => "%d"
+			"export_position" => "%d",
+      "fachrichtung" => "'%s'"
 		);
 		
     function set($id, $data) {
@@ -34,8 +35,8 @@
       return $this->execute();
     }
     
-    function get_all() {
-      $this->sql("SELECT * FROM {$this->table} ORDER BY display_position", $this->DID);
+    function get_all($orderby="display_position") {
+      $this->sql("SELECT * FROM {$this->table} ORDER BY $orderby", $this->DID);
       return $this->getlist();
     }
     function get_all_by_target($schulform,$stufe,$hj) {

@@ -56,7 +56,7 @@
       
       
       if (isset($_POST["e"])) {
-        $this->Datei->set($id, $_POST["e"]["jahr"], $_POST["e"]["hj"], $_POST["e"]["schulform"], $_POST["e"]["stufe"]);
+        $this->Datei->set($id, $_POST["e"]["jahr"], $_POST["e"]["hj"], $_POST["e"]["schulform"], $_POST["e"]["stufe"], $_POST["e"]["archiviert"]);
         
         $this->Tutor->deleteAllByDid($id);
         if (is_array($_POST["tutor_list"])) foreach($_POST["tutor_list"] as $d) $this->Tutor->addByRel($id, $d);

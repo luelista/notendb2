@@ -38,7 +38,7 @@
     
     function view() {
       //$list = $this->Kurs->get_all();
-      $list = $this->KursTemplate->get_all();
+      $list = $this->KursTemplate->get_all("schulform,stufe,hj,display_position");
       
       $this->template_vars["Inhalt"] = 
                   get_view("kurstemplate_list", array("Liste" => $list));

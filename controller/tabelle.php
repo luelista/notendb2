@@ -72,11 +72,13 @@
       
       $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
       
-      for($i = 0; $i < count($kurse); $i++) {
-        $kurse[$i]["head_lnk"] =
-          ($kurse[$i]["lehrer_perm"] > 0 || $isTutor) ?
-          URL_PREFIX."tabelle/zuordnung_edit/".$kurse[$i]["kuid"]."?datei=".$this->DID : "";
-        
+      if (!$this->archiv) {
+        for($i = 0; $i < count($kurse); $i++) {
+          $kurse[$i]["head_lnk"] =
+            ($kurse[$i]["lehrer_perm"] > 0 || $isTutor) ?
+            URL_PREFIX."tabelle/zuordnung_edit/".$kurse[$i]["kuid"]."?datei=".$this->DID : "";
+          
+        }
       }
       
       for($i = 0; $i < count($schueler); $i++) {
@@ -95,7 +97,8 @@
       }
       
       $this->template_vars["Inhalt"] =
-                  "<div style='float:right'>Tipp: Klicken Sie auf das Stift-Icon, um Schüler auszuwählen.</div>".
+                  ($this->archiv?"<div style='float:right'>Archivierte Datei - bearbeiten nicht möglich!</div>":
+                  "<div style='float:right'>Tipp: Klicken Sie auf das Stift-Icon, um Schüler auszuwählen.</div>").
                   get_view("kreuztabelle", array(
                       "Schueler" => $schueler,
                       "Kurse" => $kurse,
@@ -112,6 +115,7 @@
      * Bearbeiten der Zuordnung der zwischen einem Kurs und den Schülern
      **/
     function zuordnung_edit($kuid) {
+      if ($this->archiv) die("Archivierte Datei - bearbeiten nicht möglich!");
       $isTutor = $this->Session->isTutor($this->DID);
       
       $schueler = $this->Schueler->get_all();
@@ -151,8 +155,11 @@
       }
       
       $this->template_vars["Inhalt"] = 
+                  (($kurse[0]['eingereicht'] != null) ? "<div style='color:green;'><b>Die Noten für diesen Kurs wurden am ".$kurse[0]['eingereicht']." eingereicht und können nur noch vom Tutor bearbeitet werden.</b></div>":"")
+                  .
                   get_view("kreuztabelle", array(
                       "Heading" => "Schüler für ".$kurse[0]["art"]." '".$kurse[0]["name"]."' wählen",
+                      "ReadOnly" =>  ($kurse[0]['eingereicht'] != null) && !$isTutor,
                       "Schueler" => $schueler,
                       "Kurse" => $kurse,
                       "MethodURL" => "tabelle/zuordnung_edit/$kuid"
@@ -223,13 +230,14 @@
         }
       }
       */
-      for($i = 0; $i < count($kurse); $i++) {
-        $kurse[$i]["head_lnk"] =
-          ($kurse[$i]["lehrer_perm"] > 0 || $isTutor) ?
-          URL_PREFIX."tabelle/noten_edit/".$kurse[$i]["kuid"]."?datei=".$this->DID : "";
-        
+      if (!$this->archiv) {
+        for($i = 0; $i < count($kurse); $i++) {
+          $kurse[$i]["head_lnk"] =
+            ($kurse[$i]["lehrer_perm"] > 0 || $isTutor) ?
+            URL_PREFIX."tabelle/noten_edit/".$kurse[$i]["kuid"]."?datei=".$this->DID : "";
+          
+        }
       }
-      
       $schuelerb = array();
       
       for($i = 0; $i < count($schueler); $i++) {
@@ -260,7 +268,8 @@
       
       
       $this->template_vars["Inhalt"] .=
-                  "<div style='float:right;font:status-bar'>Tipp: Klicken Sie auf das Stift-Icon, um Noten zu vergeben.</div>".
+                  ($this->archiv?"<div style='float:right;font:status-bar;color:red'>Archivierte Datei - bearbeiten nicht möglich!</div>":
+                  "<div style='float:right;font:status-bar'>Tipp: Klicken Sie auf das Stift-Icon, um Noten zu vergeben.</div>").
                   get_view("kreuztabelle", array(
                       "Schueler" => $schuelerb,
                       "Kurse" => $kurse,
@@ -279,6 +288,7 @@
      * Anzeige einer Tabellenansicht, um Noten und Fehlstunden der Schüler einzutragen
      **/
     function noten_edit($kuid) {
+      if ($this->archiv) die("Archivierte Datei - bearbeiten nicht möglich!");
       $isTutor = $this->Session->isTutor($this->DID);
       
       $schueler = $this->Schueler->get_all();
@@ -287,6 +297,9 @@
       if ($_POST["rsk"]) {
         foreach($_POST["rsk"] as $rid=>$d) {
           $this->SchuelerKurs->set($rid, array("note" => $d["n"], "fehlstunden" => $d["f"], "fehlstunden_un" => $d["u"]));
+        }
+        if ($_POST["save_einreichen"]) {
+          $this->Kurs->set($kuid, array('eingereicht' => date('Y-m-d H:i:s')));
         }
         header("Location: ".URL_PREFIX."tabelle/noten_view?datei=".$this->DID);
         exit;
@@ -321,9 +334,14 @@
       
       $this->template_vars["Inhalt"] .= get_view("kreuztabelle_noten_helptext", array());
       
-      
+      #var_dump($kurse ,$isTutor);
       $this->template_vars["Inhalt"] .= 
+                  (($kurse[0]['eingereicht'] != null) ? "<div style='color:green;'><b>Die Noten für diesen Kurs wurden am ".$kurse[0]['eingereicht']." eingereicht und können nur noch vom Tutor bearbeitet werden.</b></div>":"")
+                  .
                   get_view("kreuztabelle", array(
+                      "ShowEinreichen" => $kurse[0]['eingereicht'] == null,
+                      "ReadOnly" =>  ($kurse[0]['eingereicht'] != null) && !$isTutor,
+                      "Heading" => "Noten für Kurs \"".$kurse[0]['name']."\" ",
                       "Schueler" => $schuelerb,
                       "Kurse" => $kurse,
                       "MethodURL" => "tabelle/noten_edit/$kuid"

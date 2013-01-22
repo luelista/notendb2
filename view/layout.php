@@ -39,10 +39,17 @@
     <?php if(isset($Dateien)): ?>
     Datei:
     <select onchange="location='?datei='+this.value">
-    <option value="-1">Auswahl</option>    
-    <?php foreach($Dateien as $d): ?>
+    <option value="-1">Auswahl</option>
+    <optgroup label="Aktuell">
+    <?php foreach($Dateien as $d): if ($d["archiviert"]) continue; ?>
     <option value=<?= $d["did"] . ($d["did"] == $DID ? " selected" : "") ?>><?= $d["descr"] ?><?=(($d["tutor"])?"[".$d["tutor"]."]":"")?></option>
     <?php endforeach; ?>
+    </optgroup>
+    <optgroup label="Archiviert">
+    <?php foreach($Dateien as $d): if (!$d["archiviert"]) continue; ?>
+    <option value=<?= $d["did"] . ($d["did"] == $DID ? " selected" : "") ?>><?= $d["descr"] ?><?=(($d["tutor"])?"[".$d["tutor"]."]":"")?></option>
+    <?php endforeach; ?>
+    </optgroup>
     </select>
     <?php endif; ?>
   </div>

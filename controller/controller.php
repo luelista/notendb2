@@ -12,6 +12,7 @@
     var $template_vars = array();
     var $Session;
     var $DID;
+    var $archiv = false;
     
     function __construct() {
       $this->Session = load_model("session");
@@ -76,7 +77,7 @@
       
       $this->template_vars["ScriptInfo"]["Datei"] = $datei;
       $DATEI->k_clear_editlocks_by_lid($this->Session->getUid());
-      
+      set_view_var("archiv", $this->archiv = $datei['archiviert']);
     }
     
   }

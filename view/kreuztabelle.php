@@ -22,6 +22,10 @@
 .kreuztabelle th.colodd {
   background: #bbb;
 }
+.kreuztabelle tr th.eingereicht {
+  background: #58f; 
+}
+
 @media screen {
   .kreuztabelle tr th.firstcol {
     position: absolute; width: 140px; overflow: hidden; padding: 3px 5px;
@@ -164,8 +168,11 @@ input.errord { background: #ff9999 !important; }
   
   <?php if(!$ReadOnly): ?>
   <form action="<?=URL_PREFIX?><?= $MethodURL ?>?datei=<?= $DID ?>" method="post">
-
-  <input type="submit" name="save" value="     Eingegebene Daten speichern     " style="float:right;background: lightgreen;border-color: darkgreen" />
+  <?php if($ShowEinreichen): ?>
+  <input type="submit" name="save_einreichen" onclick="return confirm('Wenn Sie alle Noten eingegeben haben, können Sie diese an den Tutor einreichen.\nAchtung: Nach dem Einreichen können Sie die Daten nicht mehr verändern, sondern müssen sich an den Tutor wenden.\n\nMöchten Sie die Noten dieses Kurses jetzt einreichen?')" value="      Einreichen     " style="float:right;background: lightblue;border-color: darkblue" />
+  <?php endif;?>
+  
+  <input type="submit" name="save" value="     Daten speichern     " style="float:right;background: lightgreen;border-color: darkgreen" />
   
   <input type="button" value="     Abbrechen     " style="float:right;background:#ddd;margin-right:5px;" onclick='history.back()' />
   <?php endif; ?>
@@ -187,7 +194,7 @@ input.errord { background: #ff9999 !important; }
 <th class=boguscol>&nbsp;</th>
 <!-- Lehrer -->
 <?php $colodd = false;$lastkurs=""; foreach($Kurse as $e): if($e["name"]!=$lastkurs){$lastkurs=$e["name"];$colodd=!$colodd;} ?>
-<th class="<?= $colodd ? "colodd" : "" ?> <?= $e["head_lnk"] ? 'editableColhdr"><a href="'.$e["head_lnk"] : '' ?>"><?= $e["art"] ?>&nbsp;|&nbsp;<?= $e["wochenstunden"] ?>
+<th class="<?= $colodd ? "colodd" : "" ?> <?= $e["eingereicht"]!=null ? "eingereicht" : "" ?>  <?= $e["head_lnk"] ? 'editableColhdr"><a href="'.$e["head_lnk"] : '' ?>"><?= $e["art"] ?>&nbsp;|&nbsp;<?= $e["wochenstunden"] ?>
 </th>
 <?php endforeach; ?>
 <!-- Ende Lehrer -->
@@ -241,6 +248,23 @@ for($i = 0; $i < count($Kurse);){
   <th>-</th>
   </tr>
   <?php endif; ?>
+  
+  <?php if($controller_function == "zuordnung_edit" || $controller_function == "zuordnung_view"): ?>
+  <!-- Fusszeile -->
+  <tr class="footrow">
+  <th class=firstcol>Anzahl</th>
+  <th class=boguscol>&nbsp;</th>
+  
+  <?php $colodd = false;$lastkurs=""; foreach($Kurse as $ddd): if($ddd["name"]!=$lastkurs){$lastkurs=$ddd["name"];$colodd=!$colodd;} ?>
+  <td class="cnt" data-kuid="<?= $ddd['kuid'] ?>">0</td>
+  <?php endforeach; ?>
+  
+  <td>&nbsp;</td>
+  
+  </tr>
+  <!-- Ende Fusszeile -->
+  <?php endif; ?>
+  
 <?php endif; ?>
 
 
@@ -262,19 +286,6 @@ for($i = 0; $i < count($Kurse);){
 <?php endforeach; ?>
 
 
-<!-- Fusszeile -->
-<tr class="footrow">
-<th class=firstcol>Anzahl</th>
-<th class=boguscol>&nbsp;</th>
-
-<?php $colodd = false;$lastkurs=""; foreach($Kurse as $ddd): if($ddd["name"]!=$lastkurs){$lastkurs=$ddd["name"];$colodd=!$colodd;} ?>
-<td class="cnt" data-kuid="<?= $ddd['kuid'] ?>">0</td>
-<?php endforeach; ?>
-
-<td>&nbsp;</td>
-
-</tr>
-<!-- Ende Fusszeile -->
 
 
 </table>

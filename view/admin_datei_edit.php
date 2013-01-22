@@ -13,7 +13,13 @@
   
   <table>
   <?php foreach($Data as $k=>$v): ?>
-  <tr><td><?= ucfirst($k) ?>: </td><td><input type="input" name="e[<?= $k ?>]" value="<?= htmlspecialchars($v) ?>"></td></tr>
+  <tr><td><?= ucfirst($k) ?>: </td><td>
+  <?php if ($k == "archiviert") : ?>
+  <input type="checkbox" name="e[<?= $k ?>]" value="1" <?= ($v ? "checked" : "") ?>>
+  <?php else: ?>
+  <input type="text" name="e[<?= $k ?>]" value="<?= htmlspecialchars($v) ?>">
+  <?php endif; ?>
+  </td></tr>
   <?php endforeach; ?>
   </table>
   

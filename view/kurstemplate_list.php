@@ -7,7 +7,7 @@
 
 <table width=100%>
 <tr><th>Art</th><th>Wst.</th><th>Name</th><th>Thema</th><th width=170>Aktion</th></tr>
-<?php foreach($Liste as $d): ?>
+<?php foreach($Liste as $d): $group = "$d[schulform]$d[stufe] - $d[hj]. Hj."; if ($group != $lastgroup) { echo "<tr><th colspan=5>$group</th></tr>"; $lastgroup=$group; } ?>
 <tr>
 <td><?= $d["art"] ?></td>
 <td><?= $d["wochenstunden"] ?></td>
