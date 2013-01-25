@@ -1,6 +1,10 @@
 
 <div style="float:right;width:160px;padding-left: 10px; border-left: 1px solid #bbb;">
-  Sonderfunktionen:<br><br>
+  Download der Vorlagen:<br>
+  <a href="<?= URL_PREFIX ?>content/Fertige%20Vorlagen/BG12_Vorlage.doc">BG12_Vorlage.doc</a>
+  <a href="<?= URL_PREFIX ?>content/Fertige%20Vorlagen/BG13_Vorlage.doc">BG13_Vorlage.doc</a>
+  <br><br>
+  Sonderfunktionen:<br>
   
   <a href="<?= URL_PREFIX ?>statistics/latinum?datei=<?= $DID ?>">Schüler mit Latinum exportieren  </a>
   
@@ -12,9 +16,21 @@
 <form action="<?= URL_PREFIX ?>tabelle/zeugnis_2?datei=<?= $DID ?>" method="post">
 
 <select name="kuid">
-<?php foreach($Kurse as $d): ?>
+<optgroup label="Eigene Kurse">
+<?php foreach($Kurse as $d): if ($d["lehrer_namen"]!=$curLehrerNachname) continue; ?>
+<option value="<?= $d["kuid"] ?>"><?= $d["art"] ?> <?= $d["name"] ?> (<?= $d["lehrer_namen"] ?>)</option>
+<?php endforeach; ?>
+</optgroup>
+<optgroup label="Alle Leistungskurse">
+<?php foreach($Kurse as $d): if ($d["art"] != "LK") continue; ?>
 <option value="<?= $d["kuid"] ?>"><?= $d["name"] ?> (<?= $d["lehrer_namen"] ?>)</option>
 <?php endforeach; ?>
+</optgroup>
+<optgroup label="Alle Grundkurse und andere">
+<?php foreach($Kurse as $d): if ($d["art"] == "LK") continue; ?>
+<option value="<?= $d["kuid"] ?>"><?= $d["name"] ?> (<?= $d["lehrer_namen"] ?>)</option>
+<?php endforeach; ?>
+</optgroup>
 </select>
 
 

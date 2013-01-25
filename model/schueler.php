@@ -25,7 +25,9 @@
              "ort" => "'%s'",
              "telefon" => "'%s'",
              "bemerkungen" => "'%s'",
-             "kommentar" => "'%s'"
+             "kommentar" => "'%s'",
+             "ist_g8" => "'%s'",
+             "fachrichtung" => "'%s'"
         );
     
     
@@ -45,7 +47,7 @@
     }
 
     function get_all() {
-      $this->sql("SELECT * FROM {$this->table} WHERE did = %d", $this->DID);
+      $this->sql("SELECT * FROM {$this->table} WHERE did = %d ORDER BY name, vorname", $this->DID);
       return $this->getlist();
     }
       

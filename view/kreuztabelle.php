@@ -25,6 +25,9 @@
 .kreuztabelle tr th.eingereicht {
   background: #58f; 
 }
+.kreuztabelle tr:hover th.eingereicht {
+  background: #5eb5f3 !important; 
+}
 
 @media screen {
   .kreuztabelle tr th.firstcol {

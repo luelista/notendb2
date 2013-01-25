@@ -5,13 +5,16 @@
 <div style='font:status-bar;color:red'>Archivierte Datei - bearbeiten nicht möglich!</div>
 <?php else: ?>
 <form action="<?= URL_PREFIX ?>kurs/edit/new?datei=<?= $DID ?>" method="post">
-<input type="submit" name="create" value="Erstellen"></form>
+<input type="submit" name="create" value="Kurs erstellen"></form>
+<br>
 <?php endif; ?>
+
 <table width=700>
-<tr><th>Mein Kurs?</th><th>Art</th><th>Wst.</th><th>Name</th><th>Zugeordnete Lehrer</th><th>Aktion</th></tr>
+<tr><th>Mein<br>Kurs?</th><th>Art</th><th>Wst.</th><th>Name</th><th>Zugeordnete Lehrer</th><th>Aktion</th></tr>
 <?php foreach($Liste as $d): ?>
 <tr>
-<td><input type="checkbox" disabled="disabled" name="rlk_set[<?= $d["kuid"] ?>]" value="1" <?= $d["rlk_set"] ? "checked" : "" ?>></td>
+<td>
+<img src="<?= URL_PREFIX . "content/button_" . ($d["rlk_set"] ? "ok" : "cancel") . ".png" ?>" /></td>
 <td><?= $d["art"] ?></td>
 <td><?= $d["wochenstunden"] ?></td>
 <td><?= $d["name"] ?></td>

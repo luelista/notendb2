@@ -207,6 +207,8 @@
       
       $kfilter = false;
       if (isset($_COOKIE["noten_viewMode"]) && !isset($_GET["viewMode"])) $_GET["viewMode"] = $_COOKIE["noten_viewMode"];
+      if (!$isTutor && !$this->Session->isAdmin()) $_GET["viewMode"] = "meine_Kurse";
+      
       if ($_GET["viewMode"] == "alle_Kurse") {
         $schueler = $this->Schueler->get_all();
         $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
@@ -261,9 +263,10 @@
         $kurse = $kurseb;
       }
       
-      $this->template_vars["Inhalt"] .= get_view("kreuztabelle_noten_viewselector", array(
-                      "TutorengruppenListe" => $tut_gruppen
-                      ));
+      if ($isTutor || $this->Session->isAdmin())
+        $this->template_vars["Inhalt"] .= get_view("kreuztabelle_noten_viewselector", array(
+                        "TutorengruppenListe" => $tut_gruppen
+                        ));
       //$this->template_vars["Inhalt"] .= get_view("kreuztabelle_noten_helptext", array());
       
       
@@ -375,7 +378,8 @@
       
       $this->template_vars["Inhalt"] = 
                   get_view("zeugnis_wizard_1", array(
-                      "Kurse" => $kurse
+                      "Kurse" => $kurse,
+                      "curLehrerNachname" => $this->Session->getUser("name")
                   ));
       
       $this->display_layout();

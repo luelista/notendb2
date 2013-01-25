@@ -52,10 +52,13 @@
       } else {
         $schueler = $this->Schueler->get_by_id($id);
       }
-      unset($schueler["sid"]); unset($schueler["did"]);
+      $lastMod = $schueler["updated"];
+      unset($schueler["sid"]); unset($schueler["did"]); unset($schueler["updated"]);
       
       $this->template_vars["Inhalt"] = 
-                     get_view("simple_form", array("Data" => $schueler, "Error" => false, "MethodURL" => "schueler/edit/$sid"));
+                      (isset($_POST["e"]) ? "<div class='success'>Der Schüler wurde erfolgreich gespeichert.</div>":"").
+                     get_view("simple_form", array("Data" => $schueler, "Error" => false, "MethodURL" => "schueler/edit/$sid"))
+                     ."<br><br>Letzte Änderung: $lastMod";
       
       $this->display_layout();
       
@@ -82,7 +85,7 @@
   							$ct++;
   						}
   						}
-  					$this->template_vars["Inhalt"] = "<h3>Success!</h3>".$ct." Schüler wurden importiert";
+  					$this->template_vars["Inhalt"] = "<div class='success'><h3>Success!</h3>".$ct." Schüler wurden importiert</div>";
   					$this->display_layout();
   					return;
   				} catch (Exception $e) {

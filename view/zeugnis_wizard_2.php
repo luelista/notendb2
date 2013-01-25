@@ -90,6 +90,15 @@ td.firstcol {text-align:left}
 </table>
 
 
+<div style="float:right;width:160px;padding-left: 10px; border-left: 1px solid #bbb;">
+  <br><br>
+  Download der Vorlagen:<br>
+  <a href="<?= URL_PREFIX ?>content/Fertige%20Vorlagen/BG12_Vorlage.doc">BG12_Vorlage.doc</a>
+  <a href="<?= URL_PREFIX ?>content/Fertige%20Vorlagen/BG13_Vorlage.doc">BG13_Vorlage.doc</a>
+  <br><br>
+  
+</div>
+
 <h2>Zeugnisdruck - Schritt 4: Export</h2>
 
 <p class="noprint">Wenn die oben ausgegebenen Daten korrekt sind, klicken Sie bitte auf die Schaltfläche
