@@ -9,6 +9,17 @@
 <script>
   window.ScriptInfo = <?= json_encode($ScriptInfo) ?>;
 </script>
+<style>
+#header {
+  background: <?= HEADER_BG_1?>;
+  background-image: linear-gradient(bottom, <?= HEADER_BG_1?> 0%, <?= HEADER_BG_2?> 100%);
+  background-image: -o-linear-gradient(bottom, <?= HEADER_BG_1?> 0%, <?= HEADER_BG_2?> 100%);
+  background-image: -moz-linear-gradient(bottom, <?= HEADER_BG_1?> 0%, <?= HEADER_BG_2?> 100%);
+  background-image: -webkit-linear-gradient(bottom, <?= HEADER_BG_1?> 0%, <?= HEADER_BG_2?> 100%);
+  background-image: -ms-linear-gradient(bottom, <?= HEADER_BG_1?> 0%, <?= HEADER_BG_2?> 100%);
+  background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, <?= HEADER_BG_1?>),color-stop(1, <?= HEADER_BG_2?>));
+}
+</style>
 </head>
 <body>
 
