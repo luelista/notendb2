@@ -4,6 +4,18 @@
 <meta charset="utf-8">
 <title>login</title>
 <link rel="stylesheet" type="text/css" href="<?=URL_PREFIX?>content/style.css">
+
+<style>
+#header {
+  background: <?= HEADER_BG_1?>;
+  background-image: linear-gradient(bottom, <?= HEADER_BG_1?> 0%, <?= HEADER_BG_2?> 100%);
+  background-image: -o-linear-gradient(bottom, <?= HEADER_BG_1?> 0%, <?= HEADER_BG_2?> 100%);
+  background-image: -moz-linear-gradient(bottom, <?= HEADER_BG_1?> 0%, <?= HEADER_BG_2?> 100%);
+  background-image: -webkit-linear-gradient(bottom, <?= HEADER_BG_1?> 0%, <?= HEADER_BG_2?> 100%);
+  background-image: -ms-linear-gradient(bottom, <?= HEADER_BG_1?> 0%, <?= HEADER_BG_2?> 100%);
+  background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, <?= HEADER_BG_1?>),color-stop(1, <?= HEADER_BG_2?>));
+}
+</style>
 </head>
 <body>
 
@@ -19,8 +31,11 @@
 <div class="wrapper">
   <!-- recommend recent browser -->
   <script>
-  if(!document.getElementById || (navigator.userAgent.indexOf("Firefox") < 1 && navigator.userAgent.indexOf("Chrome") < 1)) {
-  document.write('<div style="border:2px solid red;padding:10px;"><b>Wichtiger Hinweis:</b><br>Um diese Anwendung nutzen zu können, sollten Sie eine aktuelle Version von Mozilla Firefox oder Google Chrome verwenden!</div>');
+  if(!document.getElementById || (navigator.userAgent.indexOf("Firefox") < 1 && navigator.userAgent.indexOf("AppleWebKit") < 1)) {
+  document.write('<div style="border:2px solid red;padding:10px;"><b>Wichtiger Hinweis:</b><br>Um diese Anwendung nutzen zu können, sollten Sie eine aktuelle Version von Mozilla Firefox oder Google Chrome verwenden!<br><br><a href="http://www.mozilla.org/de/firefox/new/">Firefox herunterladen</a><br><br><a href="https://www.google.com/intl/de/chrome/browser/">Google Chrome herunterladen</a><br><br><a href="#" onclick="showLogin(); return false;">Im aktuellen Browser fortfahren</a> (nicht empfohlen)</div>');
+  } else window.browserOk=true;
+  function showLogin() {
+    document.getElementById("showMe").style.display="block"
   }
   </script>
   
@@ -51,7 +66,7 @@
   
   <br><br><br>
   
-  <script> document.getElementById("showMe").style.display="block" </script>
+  <script>if(browserOk) showLogin(); </script>
 </div>
 </div>
 
