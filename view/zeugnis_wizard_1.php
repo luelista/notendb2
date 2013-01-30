@@ -44,7 +44,7 @@
 <th>LK/GK</th>
 <th>WoStd.</th>
 <th>Fach</th>
-<th>Position</th>
+<th>Position <input type="button" value="Bearbeiten" onclick="$('.expPos').attr('disabled',false);$(this).attr('disabled',true);"></th>
 </tr>
 
 <?php foreach($Kurse as $d): ?>
@@ -53,7 +53,7 @@
 <td><?= $d["art"] ?></td>
 <td><?= $d["wochenstunden"] ?></td>
 <td><?= $d["name"] ?> (<?= $d["lehrer_namen"] ?>)</td>
-<td><input type="text" name="export_position[<?= $d["kuid"] ?>]" value="<?= $d["export_position"] ?>"></td>
+<td><input type="text" name="export_position[<?= $d["kuid"] ?>]" class="expPos" disabled value="<?= $d["export_position"] ?>"></td>
 </tr>
 <?php endforeach; ?>
 

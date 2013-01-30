@@ -29,6 +29,12 @@
       $this->load_menu();
     }
     
+    private function k_clear_editlocks_by_lid($lid) {
+      $db = load_model("database");
+      $db->sql("UPDATE kurs SET editlocked_by_lid = 0 WHERE editlocked_by_lid = %d", $lid);
+      $db->execute();
+    }
+    
     function load_menu() {
       $this->template_vars["Main_Menu"] = array(
         "kurs/view"                   => "<b>1. </b>Liste der Kurse",
@@ -59,6 +65,8 @@
         header("Location: ".URL_PREFIX."user/login");
         exit;
       }
+      
+      $this->k_clear_editlocks_by_lid($this->Session->getUid());
     }
     
     function require_datei() {
@@ -76,7 +84,6 @@
       }
       
       $this->template_vars["ScriptInfo"]["Datei"] = $datei;
-      $DATEI->k_clear_editlocks_by_lid($this->Session->getUid());
       set_view_var("archiv", $this->archiv = $datei['archiviert']);
     }
     

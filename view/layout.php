@@ -21,9 +21,7 @@
     | <a href="<?=URL_PREFIX?>user/logout">Abmelden</a>
     <?php if ($IsAdmin): ?>
     <br><small>
-      Administration:
-      <a href="<?=URL_PREFIX?>admin/lehrer_list?datei=<?=$DID?>">Lehrer</a>
-    | <a href="<?=URL_PREFIX?>admin/dateien?datei=<?=$DID?>">Dateien</a>
+      <a href="<?=URL_PREFIX?>admin/dashboard">Administrationsbereich</a>
     </small>
     <?php endif; ?>
   </div>

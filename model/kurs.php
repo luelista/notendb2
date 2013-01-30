@@ -47,15 +47,15 @@
       
     }
     function get_all_with_lehrer_namen_by_export_position() {
-      $this->sql("SELECT k.kuid,k.name,k.art,k.wochenstunden,k.export_position,k.thema,GROUP_CONCAT(l.name) AS lehrer_namen, k.eingereicht FROM kurs AS k LEFT OUTER JOIN rel_lehrer_kurs AS rlk ON k.kuid=rlk.r_kuid LEFT OUTER JOIN lehrer AS l ON rlk.r_lid=l.lid WHERE did = %d GROUP BY k.kuid ORDER BY k.export_position, k.display_position", $this->DID);
+      $this->sql("SELECT k.kuid,k.name,k.art,k.wochenstunden,k.export_position,k.thema,GROUP_CONCAT(CONCAT(l.titel,' ',l.name)) AS lehrer_namen, k.eingereicht FROM kurs AS k LEFT OUTER JOIN rel_lehrer_kurs AS rlk ON k.kuid=rlk.r_kuid LEFT OUTER JOIN lehrer AS l ON rlk.r_lid=l.lid WHERE did = %d GROUP BY k.kuid ORDER BY k.export_position, k.display_position", $this->DID);
       return $this->getlist();
     }
     function get_by_lid_with_lehrer_namen($lid) {
-      $this->sql("SELECT k.kuid,k.name,k.art,k.wochenstunden,GROUP_CONCAT(l.name) AS lehrer_namen, k.eingereicht FROM kurs AS k INNER JOIN rel_lehrer_kurs AS rlk2 ON k.kuid=rlk2.r_kuid LEFT OUTER JOIN rel_lehrer_kurs AS rlk ON k.kuid=rlk.r_kuid LEFT OUTER JOIN lehrer AS l ON rlk.r_lid=l.lid WHERE did = %d AND rlk2.r_lid=%d GROUP BY k.kuid ORDER BY k.name,l.name", $this->DID, $lid);
+      $this->sql("SELECT k.kuid,k.name,k.art,k.wochenstunden,GROUP_CONCAT(CONCAT(l.titel,' ',l.name)) AS lehrer_namen, k.eingereicht FROM kurs AS k INNER JOIN rel_lehrer_kurs AS rlk2 ON k.kuid=rlk2.r_kuid LEFT OUTER JOIN rel_lehrer_kurs AS rlk ON k.kuid=rlk.r_kuid LEFT OUTER JOIN lehrer AS l ON rlk.r_lid=l.lid WHERE did = %d AND rlk2.r_lid=%d GROUP BY k.kuid ORDER BY k.name,l.name", $this->DID, $lid);
       return $this->getlist();
     }
     function get_by_kuid_with_lehrer_namen($kuid) {
-      $this->sql("SELECT k.kuid,k.name,k.art,k.wochenstunden,GROUP_CONCAT(l.name) AS lehrer_namen,k.eingereicht FROM kurs AS k LEFT OUTER JOIN rel_lehrer_kurs AS rlk ON k.kuid=rlk.r_kuid LEFT OUTER JOIN lehrer AS l ON rlk.r_lid=l.lid WHERE did = %d AND k.kuid=%d GROUP BY k.kuid ORDER BY k.name,l.name", $this->DID, $kuid);
+      $this->sql("SELECT k.kuid,k.name,k.art,k.wochenstunden,GROUP_CONCAT(CONCAT(l.titel,' ',l.name)) AS lehrer_namen,k.eingereicht FROM kurs AS k LEFT OUTER JOIN rel_lehrer_kurs AS rlk ON k.kuid=rlk.r_kuid LEFT OUTER JOIN lehrer AS l ON rlk.r_lid=l.lid WHERE did = %d AND k.kuid=%d GROUP BY k.kuid ORDER BY k.name,l.name", $this->DID, $kuid);
       return $this->getlist();
     }
     

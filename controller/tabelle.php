@@ -297,24 +297,32 @@
       $schueler = $this->Schueler->get_all();
       $kurse = $this->Kurs->get_by_kuid_with_lehrer_namen($kuid);
       
-      if ($_POST["rsk"]) {
+      $ReadOnly = ($kurse[0]['eingereicht'] != null) && !$isTutor;
+      
+      if ($_POST["rsk"] && !$ReadOnly) {
         foreach($_POST["rsk"] as $rid=>$d) {
           $this->SchuelerKurs->set($rid, array("note" => $d["n"], "fehlstunden" => $d["f"], "fehlstunden_un" => $d["u"]));
         }
         if ($_POST["save_einreichen"]) {
+          $this->DB->sql("SELECT count(*) FROM rel_schueler_kurs WHERE r_kuid = %d AND NOT (note >= 1 AND note <= 15)", $kuid);
+          $errCount = $this->DB->getsingle();
+          if ($errCount > 0) {
+            $this->die_with_error("Die eingegebenen Daten wurden gespeichert. <br><br><b>Der Kurs wurde nicht eingereicht,</b> da bei $errCount Schüler(n) keine gültige Note angegeben wurde. Bitte überprüfen Sie Ihre Eingabe!");
+          }
           $this->Kurs->set($kuid, array('eingereicht' => date('Y-m-d H:i:s')));
         }
         header("Location: ".URL_PREFIX."tabelle/noten_view?datei=".$this->DID);
         exit;
       }
       
-      $lockSuccess = $this->Datei->k_set_editlock($kuid, $this->Session->getUid());
-      if (!$lockSuccess) {
-        $this->DB->sql("SELECT anrede,vorname,lehrer.name FROM lehrer INNER JOIN kurs ON lehrer.lid=kurs.editlocked_by_lid WHERE kuid = %d", $kuid);
-        $lehrer = $this->DB->get();
-        $this->die_with_error("Diese Spalte wird gerade von <b>$lehrer[anrede] $lehrer[vorname] $lehrer[name]</b> bearbeitet und ist daher gesperrt. Bitte versuchen Sie es später erneut. Falls diese Sperrung länger besteht, wenden Sie sich bitte an den gerade bearbeitenden Lehrer oder an einen Administrator.");
+      if (!$ReadOnly) {
+        $lockSuccess = $this->Datei->k_set_editlock($kuid, $this->Session->getUid());
+        if (!$lockSuccess) {
+          $this->DB->sql("SELECT anrede,vorname,lehrer.name FROM lehrer INNER JOIN kurs ON lehrer.lid=kurs.editlocked_by_lid WHERE kuid = %d", $kuid);
+          $lehrer = $this->DB->get();
+          $this->die_with_error("Diese Spalte wird gerade von <b>$lehrer[anrede] $lehrer[vorname] $lehrer[name]</b> bearbeitet und ist daher gesperrt. Bitte versuchen Sie es später erneut. Falls diese Sperrung länger besteht, wenden Sie sich bitte an den gerade bearbeitenden Lehrer oder an einen Administrator.");
+        }
       }
-      
       
       $schuelerb = array();
       for($i = 0; $i < count($schueler); $i++) {
@@ -343,7 +351,7 @@
                   .
                   get_view("kreuztabelle", array(
                       "ShowEinreichen" => $kurse[0]['eingereicht'] == null,
-                      "ReadOnly" =>  ($kurse[0]['eingereicht'] != null) && !$isTutor,
+                      "ReadOnly" =>  $ReadOnly,
                       "Heading" => "Noten für Kurs \"".$kurse[0]['name']."\" ",
                       "Schueler" => $schuelerb,
                       "Kurse" => $kurse,
@@ -391,6 +399,8 @@
      **/
     function zeugnis_2() {
       $tutorengruppe = $_POST["kuid"];
+      
+      file_put_contents(ROOT.'/temp/exportPosSav.log',"\n$tutorengruppe - ".date("r")." - ".$this->Session->getUser("name")."\n$_SERVER[HTTP_USER_AGENT]\n".print_r($_POST,true),FILE_APPEND);
       
       if (isset($_POST["export_position"])) {
         foreach($_POST["export_position"] as $kuid=>$export_position) {

@@ -38,6 +38,22 @@
     }
     
     
+    // Dashboard
+    function dashboard() {
+      
+      $this->template_vars["Inhalt"] = 
+                  get_view("admin_dashboard", array());
+      
+      $this->display_layout();
+    }
+    
+    function clear_editlocks() {
+      $this->Datei->k_clear_all_editlocks();
+      
+      $this->template_vars["Inhalt"] = "<div class='success'>Alle Sperrungen wurden aufgehoben<br><br><input type='button' value='   OK   ' onclick='history.back()'></div>";
+      $this->display_layout();
+    }
+    
     //Dateien
     
     function dateien() {
