@@ -84,6 +84,7 @@
 
 <div id="footer">
 <div class="wrapper">
+<b style="float:right;color:black;">Bei technischen Fragen und Problemen können Sie uns per Mail an <a href="mailto:notendb@wikilab.de">notendb@wikilab.de</a> erreichen.</b>
   (c) 2012 Max Weller, Moritz Willig
 </div>
 </div>

@@ -81,6 +81,7 @@ input.errord { background: #ff9999 !important; }
 </style>
 
 <script>
+  window.isEinreichen=false;
   var tabMode = "<?=$controller_function ?>";
   $(function() {
     $(".tableContainer").scroll(function() {
@@ -93,22 +94,42 @@ input.errord { background: #ff9999 !important; }
     $(window).resize(onResizeTab);
     var formSent = false, formDirty = false;
     $("form").submit(function() {
-      var invalidNoten = false;
-      $("input.n").each(function() { if ((!is_int($(this).val()) || parseInt($(this).val()) < 0 || parseInt($(this).val()) > 15)) { invalidNoten=true;$(this).addClass("errord"); } else {$(this).removeClass("errord");} });
-      
+      var invalidNoten = false, missingNoten = 0;
+      $("input.n").each(function() {
+        var v = $(this).val();
+        if ((!is_int(v) || parseInt(v) < 0 || parseInt(v) > 15)) {
+          invalidNoten=true;$(this).addClass("errord");
+        } else {
+          $(this).removeClass("errord");
+        }
+      });
+      $("input.n,input.f,input.u").each(function() { if($(this).val()=="") { missingNoten++;$(this).addClass("errord");} });
       if (invalidNoten) { alert("Bitte geben Sie nur Noten zwischen 0 und 15 ein."); return false; }
-      formSent = true
+      if (missingNoten>0 && window.isEinreichen) { alert("Sie haben nicht alle Felder ausgefüllt. Bitte füllen Sie alles aus oder klicken Sie auf Speichern statt auf Einreichen."); return false; }
+      if (missingNoten>0 && !window.isEinreichen) { alert("Hinweis:\nSie haben noch nicht alle Felder ausgefüllt. Bitte öffnen Sie dieses Formular später erneut, um es zu vervollständigen."); return false; }
+      
+      formSent = true;
     } );
     function check_inp(i) {
-      if ($(i).val() == "" || !is_int($(i).val())) $(i).addClass("errord"); else $(i).removeClass("errord");
+      var v = $(i).val();
+      if (v.length == 1) { v. }
+      if ($(i) == "" || !is_int(v) || parseInt(v) < 0 || parseInt(v) > 15) $(i).addClass("errord"); else $(i).removeClass("errord");
     }
     function makeDirty() {
       formDirty = true; $("input[name=save]").css("background", "#ff4444");
     }
-    $("input[type=text], input[type=checkbox]").change(function() {
+    function nextInput(act) {
+      var inputs = $(act).parents("table").find("input");
+      return inputs.filter(":gt(" + inputs.index(act) + ")").first();
+    }
+    $("input[type=text]").change(function() {
       check_inp(this);
       makeDirty();
     } ).each(function() { check_inp(this); });
+    
+    $("input[type=text], input[type=checkbox]").change(function() {
+      makeDirty();
+    } );
     
     $(window).bind("beforeunload", function() {
       if (formDirty && !formSent) {
@@ -137,6 +158,7 @@ input.errord { background: #ff9999 !important; }
       calcFehlstd();
       
       $("input.f, input.u").change(function() { calcFehlstd(); });
+      $("input[type=text]").keydown(function(e) { if (e.keyCode==13) {e.preventDefault(); nextInput(this).focus(); return false;}  })
     }
     if (tabMode == "zuordnung_view" || tabMode == "zuordnung_edit") {
       function calcCount() {
@@ -172,7 +194,7 @@ input.errord { background: #ff9999 !important; }
   <?php if(!$ReadOnly): ?>
   <form action="<?=URL_PREFIX?><?= $MethodURL ?>?datei=<?= $DID ?>" method="post">
   <?php if($ShowEinreichen): ?>
-  <input type="submit" name="save_einreichen" onclick="return confirm('Wenn Sie alle Noten eingegeben haben, können Sie diese an den Tutor einreichen.\nAchtung: Nach dem Einreichen können Sie die Daten nicht mehr verändern, sondern müssen sich an den Tutor wenden.\n\nMöchten Sie die Noten dieses Kurses jetzt einreichen?')" value="      Einreichen     " style="float:right;background: lightblue;border-color: darkblue" />
+  <input type="submit" name="save_einreichen" onclick="if(confirm('Wenn Sie alle Noten eingegeben haben, können Sie diese an den Tutor einreichen.\nAchtung: Nach dem Einreichen können Sie die Daten nicht mehr verändern, sondern müssen sich an den Tutor wenden.\n\nMöchten Sie die Noten dieses Kurses jetzt einreichen?')) isEinreichen=true; else return false;" value="      Einreichen     " style="float:right;background: lightblue;border-color: darkblue" />
   <?php endif;?>
   
   <input type="submit" name="save" value="     Daten speichern     " style="float:right;background: lightgreen;border-color: darkgreen" />
