@@ -512,9 +512,6 @@
       }
       
       if ($_POST["export"]) {
-      
-        //$this->template_vars["Inhalt"] = "<pre>" . $output . "</pre>";
-        //$this->display_layout();
         header("Content-disposition: attachment; filename=\"$_POST[exp_name].csv\"");
         header("Content-Type: text/plain");
         echo $output;
@@ -550,6 +547,15 @@
       }
     }
     
+    /**
+     * Prepare TEX input file for pdflatex command
+     * Replaces Placeholders with actual content from $data
+     * 
+     * @param   src    Template source file
+     * @param   temp   Temporary .tex file to create
+     * @param   glob   Global Template placeholders
+     * @param   data   Seitenweise Platzhalter
+     **/
     private function preprocTexfile($src, $temp, $glob, $data) {
       $lines=explode("\"\r\n\"", substr($data, 1, -1));
       $headers=explode('";"', $lines[0]);
