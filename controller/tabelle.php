@@ -304,7 +304,7 @@
           $this->SchuelerKurs->set($rid, array("note" => $d["n"], "fehlstunden" => $d["f"], "fehlstunden_un" => $d["u"]));
         }
         if ($_POST["save_einreichen"]) {
-          $this->DB->sql("SELECT count(*) FROM rel_schueler_kurs WHERE r_kuid = %d AND NOT (note >= 1 AND note <= 15)", $kuid);
+          $this->DB->sql("SELECT count(*) FROM rel_schueler_kurs WHERE r_kuid = %d AND NOT (note >= 0 AND note <= 15)", $kuid);
           $errCount = $this->DB->getsingle();
           if ($errCount > 0) {
             $this->die_with_error("Die eingegebenen Daten wurden gespeichert. <br><br><b>Der Kurs wurde nicht eingereicht,</b> da bei $errCount Schüler(n) keine gültige Note angegeben wurde. Bitte überprüfen Sie Ihre Eingabe!");
