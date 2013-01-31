@@ -4,6 +4,7 @@ RewriteEngine On
 
 
 RewriteRule ^content/ - [L]
+RewriteRule ^install\.php - [L]
 
 # alle nicht abgefangenen -> pageout.php
 RewriteCond %{ENV:REDIRECT_STATUS} ^$

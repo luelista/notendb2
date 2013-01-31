@@ -119,6 +119,11 @@
     }
   }
   
+  function lightencolor($color, $amount) {
+    for($i=0; $i<3; $i++) $color[$i] = min(255, $color[$i]+$amount);
+    return $color;
+  }
+  
   /**
    * Converts a HTML hex color value to an array of R,G,B values
    * @return array

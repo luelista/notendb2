@@ -11,7 +11,7 @@
     
     var $template_vars = array();
     var $Session;
-    var $DID;
+    var $DID, $curDatei;
     var $archiv = false;
     
     function __construct() {
@@ -22,6 +22,11 @@
       $this->DID = isset($_GET["datei"]) && intval($_GET["datei"]) > 0 ? intval($_GET["datei"]) : -1;
       set_view_var("DID", $this->DID);
       set_view_var("IsAdmin", $this->Session->isAdmin());
+      
+      // For default layout
+      $this->template_vars["SiteTitle"] = HEADER_SITE_TITLE;
+      $this->template_vars["DocTitle"] = get_view_var("controller_class");
+      define('HEADER_BG_COLOR_2', rgb2html(lightencolor(html2rgb(HEADER_BG_COLOR), 30)));
       
       $user = $this->Session->getUser();
       $this->template_vars["Benutzername"] = $user["kuerzel"];
@@ -85,6 +90,7 @@
       
       $this->template_vars["ScriptInfo"]["Datei"] = $datei;
       set_view_var("archiv", $this->archiv = $datei['archiviert']);
+      $this->curDatei = $datei;
     }
     
   }

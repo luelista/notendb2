@@ -32,10 +32,9 @@
       
       // -> check if user is root and handle differently because root password is 
       //    not written to database for security reasons
-      // -> also, this makes it impossible to change root passw. via web interface
       if ($username == "root") {
-        if ($_POST["password"] == ROOT_PASW) {
-          return array("kuerzel" => "root", "is_admin" => 1);
+        if ($_POST["password"] == LOGIN_ROOTPASW) {
+          return array("kuerzel" => "root", "is_admin" => 1, "lid" => 0);
         } else {
           return false;
         }

@@ -113,4 +113,5 @@ Word-Seriendruck-Funktion laden, um daraus Zeugnisse zu generieren.
 <input type="hidden" name="kuid" value="<?= $Kuid ?>">
 <input type="submit" name="export" value="  Als CSV Exportieren  ">
 <input type="submit" name="export_xls" value="  Als Excel-Mappe Exportieren  ">
+<input type="submit" name="export_pdf" value="  Als PDF-Datei Exportieren  ">
 </form>

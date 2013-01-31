@@ -16,8 +16,7 @@
     static $link;
     static $is_connected = false;
     
-		// Private, because they contain sensitive data
-    private static $inifile;
+    // private var for sensitive database passwords
     private static $settings;
     
 		// For sql() function
@@ -31,17 +30,8 @@
     var $idcol = null;
 	  var $structure=null;
 	  
-    function read_ini() {
-			if (!$GLOBALS["DISABLE_TRACE"]) trace("Trying to read configuration from '".CONFIG_FILE."' ...");
-      DatabaseModel::$inifile = CONFIG_FILE;
-      DatabaseModel::$settings = parse_ini_file(DatabaseModel::$inifile,true);
-      DatabaseModel::$settings["Salt"]= DatabaseModel::$settings["Login"]["Salt"];
-			//if (!$GLOBALS["DISABLE_TRACE"]) trace("success!", DatabaseModel::$settings);
-      return DatabaseModel::$settings;
-    }
-    
-    function set_config($host, $user, $pass, $db) {
-      DatabaseModel::$settings = array("Host"=>$host,"User"=>$user,"Pass"=>$pass,"Database"=>$db);
+	  function set_config($host, $user, $pass, $db) {
+      DatabaseModel::$settings["DB"] = array("Host"=>$host,"User"=>$user,"Pass"=>$pass,"Database"=>$db);
     }
     
 		/**
@@ -49,7 +39,7 @@
 		 **/
     function __construct($alt_db="") {
       if (DatabaseModel::$is_connected == true) return;
-      if (!DatabaseModel::$settings) $this->read_ini();
+      if (!DatabaseModel::$settings) $this->set_config(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
       $sect = $alt_db==null?"DB":"alt_db_$alt_db";
       DatabaseModel::$link = @mysql_connect(DatabaseModel::$settings[$sect]['Host'], DatabaseModel::$settings[$sect]['User'], DatabaseModel::$settings[$sect]['Pass']);
       if (!DatabaseModel::$link) { trace("Could not connect to sql server. ".mysql_error()); trigger_error("Database Error occured. Please try again later.",E_USER_ERROR); }
@@ -230,7 +220,7 @@
 		function hash($STR, $rounds, $username) {
 			###trace("DataToHash", DatabaseModel::$settings["Salt"].$username."@", $STR);
 			for($i = 0; $i < $rounds; $i++) {
-				$STR = md5(DatabaseModel::$settings["Salt"].$username."@".$STR);
+				$STR = md5(LOGIN_SALT.$username."@".$STR);
 			}
 			return $STR;
 	  }

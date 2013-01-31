@@ -456,7 +456,7 @@
       $POS_COUNT = 30;
       
       $output = "";
-      $output .= '"D_jahr";"D_hj";"D_stufe";"Name";"Geburtsdatum";"KOM"';
+      $output .= '"D_jahr";"D_hj";"D_stufe";"Name";"Geburtsdatum";"KOM";"Fachrichtung"';
       for($i = 1; $i <= $POS_COUNT; $i++) $output .= ';"K_'.$i.'_Name";"K_'.$i.'_Art";"K_'.$i.'_WST";"K_'.$i.'_Thema";"K_'.$i.'_Note";"K_'.$i.'_Lehrer";"K_'.$i.'_Reserviert"';
       
       $output .= ';"FEHL";"UN"';
@@ -471,11 +471,13 @@
         $this->DB->sql("SELECT rid,r_kuid,note,fehlstunden,fehlstunden_un FROM rel_schueler_kurs WHERE r_sid = %d", $schueler[$i]['sid']);
         $info = $this->DB->getlist();
         
+        $fachrichtung = "!!! unbekannt !!!";
         foreach($kurse as $d) {
           $schueler[$i]['reldata'][$d['kuid']][0] = $d['export_position'];
           $schueler[$i]['reldata'][$d['kuid']][1] = ';"'.$d['name'].'";"'.$d['art'].'";"'.$d['wochenstunden'].'";"'.$d['thema'].'"';
           $schueler[$i]['reldata'][$d['kuid']][2] = false;
           $schueler[$i]['reldata'][$d['kuid']][3] = ';"'.$d['lehrer_namen'].'";""';
+          $schueler[$i]['reldata'][$d['kuid']][4] = $d['fachrichtung'];
         }
         $positions = array();
         $fehl = $un = 0;
@@ -484,12 +486,13 @@
           $schueler[$i]['reldata'][$d['r_kuid']][1] .
             ';"'.sprintf("%02d", $d['note']).'"'.
           $schueler[$i]['reldata'][$d['r_kuid']][3] ;
+          if ($schueler[$i]['reldata'][$d['r_kuid']][4]) $fachrichtung = $schueler[$i]['reldata'][$d['r_kuid']][4];
           $fehl+=$d["fehlstunden"]; $un+=$d["fehlstunden_un"];
         }
         
         $dat = $this->Datei->get_by_id($this->DID);
         $output .= "\r\n" . '"'. $dat["jahr"] .'";"'.$dat["hj"].'";"'.$dat["stufe"].'"';
-        $output .= ';"'.$schueler[$i]['vorname'].' '.$schueler[$i]['name'].'";"'.$schueler[$i]['geburtsdatum'].'";"'.$schueler[$i]['kommentar'].'"';
+        $output .= ';"'.$schueler[$i]['vorname'].' '.$schueler[$i]['name'].'";"'.$schueler[$i]['geburtsdatum'].'";"'.$schueler[$i]['kommentar'].'";"'.$fachrichtung.'"';
         
         for($p = 1; $p <= $POS_COUNT; $p++) {
           //$output.= "[$j/ $p=".$schueler[$i]['reldata'][$kurse[$j]['kuid']][0]."]";
@@ -516,18 +519,54 @@
         header("Content-Type: text/plain");
         echo $output;
       } elseif ($_POST["export_xls"]) {
-        $tempName = "/srv/www/htdocs/notendb2/temp/export.txt";
-        $tempName2 = "/srv/www/htdocs/notendb2/temp/export.xls";
+        $tempName = ROOT."/temp/export.txt";
+        $tempName2 = ROOT."/temp/export.xls";
         
         file_put_contents($tempName, $output);
         
-         shell_exec("java -jar /srv/www/include/MakeMeExcel.jar \"$_POST[exp_name]\" if \"$tempName\" of \"$tempName2\"");
+        shell_exec("java -jar /srv/www/include/MakeMeExcel.jar \"$_POST[exp_name]\" if \"$tempName\" of \"$tempName2\"");
         header("Content-disposition: attachment; filename=\"$_POST[exp_name].xls\"");
         header("Content-Type: application/vnd.ms-excel");
+        readfile($tempName2);
+      } elseif ($_POST["export_pdf"]) {
+        $vorlage = ROOT."/content/template_zeugnis_q.tex";
+        $tempName = ROOT."/temp/export.tex";
+        $tempName2 = ROOT."/temp/export.pdf";
+        $globRepl = array(
+          '\\tpl{template_name}' => "$vorlage", 
+          '\\tpl{datetime}' => date("r"), 
+          '\\tpl{stufe}' => $this->curDatei['stufe'],
+          '\\tpl{datei}' => '['.$this->curDatei['schulform'].$this->curDatei['stufe'].'] '.$this->curDatei['jahr'].'-'.$this->curDatei['hj'],
+          '\\tpl{user_kuerzel}' => $this->Session->getUser('kuerzel'), 
+          '\\tpl{export_name}' => $_POST['exp_name'], 
+          '\\tpl{count}' => count($schueler));
+        
+        $this->preprocTexfile($vorlage, $tempName, $globRepl, $output);
+        shell_exec("cd \"".ROOT."/temp\"; TEXINPUTS=\"".ROOT."/content/\" pdflatex -interaction=batchmode -output-directory=\"".ROOT."/temp\" \"$tempName\"");
+        
+        header("Content-disposition: inline; filename=\"$_POST[exp_name].pdf\"");
+        header("Content-Type: application/pdf");
         readfile($tempName2);
       }
     }
     
+    private function preprocTexfile($src, $temp, $glob, $data) {
+      $lines=explode("\"\r\n\"", substr($data, 1, -1));
+      $headers=explode('";"', $lines[0]);
+      $vorlage=explode("%TPL-REPETITION-MARK", str_replace(array_keys($glob), array_values($glob), file_get_contents($src)));
+      $out=fopen($temp, 'w');
+      fputs($out, $vorlage[0]);
+      for($i=1; $i<count($lines); $i++) {
+        $replacement = explode('";"', $lines[$i]);
+        $page=$vorlage[1];
+        for($c=0; $c<count($replacement); $c++) {
+          $page=str_replace('\\tpl{'.$headers[$c].'}', $replacement[$c], $page);
+        }
+        fputs($out, "\n%--------- Page $i ---------------\n\n$page");
+      }
+      fputs($out, $vorlage[2]);
+      fclose($out);
+    }
     
     /**
      * Dritte Seite des Zeugnisdruckassistenten (Download der Druckdatei)

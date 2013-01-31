@@ -30,7 +30,9 @@
         }
       }
       
-      load_view("loginform", $template_vars);
+      
+      $this->template_vars["Inhalt"] .= get_view("loginform", $template_vars);
+      load_view("layoutmin", $this->template_vars);
     }
     
     function logout() {

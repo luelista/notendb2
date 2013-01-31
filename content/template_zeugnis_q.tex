@@ -1,0 +1,223 @@
+\documentclass[a4paper]{minimal}
+\usepackage[utf8]{inputenc}
+\usepackage[top=3.7cm, bottom=1.1cm, left=1.4cm, right=1.1cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}           \usepackage[ngerman]{babel}
+\usepackage{graphicx}
+
+\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault} 
+
+\renewcommand{\arraystretch}{1.2}
+
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\setlength\arraycolsep{5pt}
+\setlength\tabcolsep{6pt}
+\setlength\arrayrulewidth{.4pt}
+\setlength{\parindent}{0pt}
+  
+\newcommand{\tpl}[1]{undef.}
+
+\newcommand{\ueberschrift}[1]{
+  \paragraph{}
+  \vspace{0.4cm}
+  {\fontsize{13}{14} \bfseries \selectfont  #1}
+  \vspace{0.15cm}
+  \paragraph{}
+}
+
+\newcommand{\small}[1]{
+  {\fontsize{9}{11} \selectfont  #1}
+}
+
+\def \colAw {3.7cm}
+\def \colBw {1.0cm}
+\def \colCw {1.4cm}
+\def \colDw {6.5cm}
+\def \colEw {2.1cm}
+\def \colFw {1.1cm}
+
+\begin{document}
+
+\hline
+\vspace{0.4cm}
+\centerline{\bfseries Zeugnis-Export }
+\vspace{0.4cm}
+\hline
+
+
+\vspace{2cm}
+
+\begin{tabular}{L{3.5cm} L{7cm}}
+Quelldatei: & \tpl{datei} \\
+Kurs: & \tpl{export_name} \\
+Anzahl Zeugnisse: & \tpl{count} \\
+Verarbeitungsdatum: & \tpl{datetime} \\
+Benutzer: & \tpl{user_kuerzel} \\
+\end{tabular}
+
+
+\vspace{15cm}
+\hline
+\vspace{0.15cm}
+
+\includegraphics[scale=0.25]{icon}
+
+\\
+
+\vspace{-1cm}
+
+{\addtolength{\leftskip}{13mm} 
+
+\\
+Erstellt mit Noten-Verwaltungs-Software <<notendb>> \\ am \today
+\\
+\verb|\tpl{template_name}|
+\par}
+\vspace{0.2cm}
+\hline
+
+
+
+%TPL-REPETITION-MARK
+\newpage
+
+  {\centerline{
+    Berufliches Gymnasium Fachrichtung Technik, \tpl{Fachrichtung}
+  }}
+  
+  \vspace{0.3cm}
+  \hline
+  \vspace{0.4cm}
+  
+  Jahrgangsstufe \tpl{stufe} (Qualifikationsphase)
+  \hfill Schuljahr \tpl{D_jahr} (\tpl{D_hj}. HJ)
+  
+  \vspace{0.3cm}
+  \ueberschrift{Halbjahreszeugnis für \tpl{Name}}
+  
+  
+\begin{tabular}{|C{\colAw}|C{\colBw}|C{\colCw}|C{\colDw}|C{\colEw}|C{\colFw}|}
+\hline
+ Fach & LK/GK & Wochen-Stunden & Kursthema & Kursleitung & Punkte \\
+\hline
+\end{tabular}
+  
+  \ueberschrift{I. Sprachlich-literarisch-künstlerisches Aufgabenfeld}
+  
+\begin{tabular}{|L{\colAw}|C{\colBw}|C{\colCw}|L{\colDw}|L{\colEw}|C{\colFw}|}
+\hline
+\tpl{K_1_Name} & \tpl{K_1_Art} & \tpl{K_1_WST} & \tpl{K_1_Thema} & \tpl{K_1_Lehrer} & \tpl{K_1_Note} \\
+\hline
+ \tpl{K_2_Name} & \tpl{K_2_Art} & \tpl{K_2_WST} & \tpl{K_2_Thema} & \tpl{K_2_Lehrer} & \tpl{K_2_Note} \\
+\hline
+ \tpl{K_3_Name} & \tpl{K_3_Art} & \tpl{K_3_WST} & \tpl{K_3_Thema} & \tpl{K_3_Lehrer} & \tpl{K_3_Note} \\
+\hline
+ \tpl{K_4_Name} & \tpl{K_4_Art} & \tpl{K_4_WST} & \tpl{K_4_Thema} & \tpl{K_4_Lehrer} & \tpl{K_4_Note} \\
+\hline
+ \tpl{K_5_Name} & \tpl{K_5_Art} & \tpl{K_5_WST} & \tpl{K_5_Thema} & \tpl{K_5_Lehrer} & \tpl{K_5_Note} \\
+\hline
+\end{tabular}
+
+
+
+  \ueberschrift{II. Gesellschaftliches Aufgabenfeld}
+  
+  
+\begin{tabular}{|L{\colAw}|C{\colBw}|C{\colCw}|L{\colDw}|L{\colEw}|C{\colFw}|}
+\hline
+ \tpl{K_6_Name} & \tpl{K_6_Art} & \tpl{K_6_WST} & \tpl{K_6_Thema} & \tpl{K_6_Lehrer} & \tpl{K_6_Note} \\
+\hline
+ \tpl{K_7_Name} & \tpl{K_7_Art} & \tpl{K_7_WST} & \tpl{K_7_Thema} & \tpl{K_7_Lehrer} & \tpl{K_7_Note} \\
+\hline
+ \tpl{K_8_Name} & \tpl{K_8_Art} & \tpl{K_8_WST} & \tpl{K_8_Thema} & \tpl{K_8_Lehrer} & \tpl{K_8_Note} \\
+\hline
+ \tpl{K_9_Name} & \tpl{K_9_Art} & \tpl{K_9_WST} & \tpl{K_9_Thema} & \tpl{K_9_Lehrer} & \tpl{K_9_Note} \\
+\hline
+\end{tabular}
+
+
+
+\ueberschrift{III. Mathematisch-naturwissenschaftlich-technisches Aufgabenfeld}
+
+
+
+\begin{tabular}{|L{\colAw}|C{\colBw}|C{\colCw}|L{\colDw}|L{\colEw}|C{\colFw}|}
+\hline
+ \tpl{K_10_Name} & \tpl{K_10_Art} & \tpl{K_10_WST} & \tpl{K_10_Thema} & \tpl{K_10_Lehrer} & \tpl{K_10_Note} \\
+\hline
+ \tpl{K_11_Name} & \tpl{K_11_Art} & \tpl{K_11_WST} & \tpl{K_11_Thema} & \tpl{K_11_Lehrer} & \tpl{K_11_Note} \\
+\hline
+ \tpl{K_12_Name} & \tpl{K_12_Art} & \tpl{K_12_WST} & \tpl{K_12_Thema} & \tpl{K_12_Lehrer} & \tpl{K_12_Note} \\
+\hline
+ \tpl{K_13_Name} & \tpl{K_13_Art} & \tpl{K_13_WST} & \tpl{K_13_Thema} & \tpl{K_13_Lehrer} & \tpl{K_13_Note} \\
+\hline
+ \tpl{K_14_Name} & \tpl{K_14_Art} & \tpl{K_14_WST} & \tpl{K_14_Thema} & \tpl{K_14_Lehrer} & \tpl{K_14_Note} \\
+\hline
+ \tpl{K_15_Name} & \tpl{K_15_Art} & \tpl{K_15_WST} & \tpl{K_15_Thema} & \tpl{K_15_Lehrer} & \tpl{K_15_Note} \\
+\hline
+ \tpl{K_16_Name} & \tpl{K_16_Art} & \tpl{K_16_WST} & \tpl{K_16_Thema} & \tpl{K_16_Lehrer} & \tpl{K_16_Note} \\
+\hline
+ \tpl{K_17_Name} & \tpl{K_17_Art} & \tpl{K_17_WST} & \tpl{K_17_Thema} & \tpl{K_17_Lehrer} & \tpl{K_17_Note} \\
+\hline
+\end{tabular}
+
+
+\ueberschrift{IV. Sport}
+
+
+
+\begin{tabular}{|L{\colAw}|C{\colBw}|C{\colCw}|L{\colDw}|L{\colEw}|C{\colFw}|}
+\hline
+ \tpl{K_18_Name} & \tpl{K_18_Art} & \tpl{K_18_WST} & \tpl{K_18_Thema} & \tpl{K_18_Lehrer} & \tpl{K_18_Note} \\
+\hline
+
+\end{tabular}
+
+  \vspace{0.5cm}
+  \paragraph{}
+  Versäumte Stunden \tpl{FEHL}, davon unentschuldigt \tpl{UN}
+  
+  \vspace{0.35cm}
+  \paragraph{}
+  Bemerkungen: \tpl{KOM}
+  
+  \paragraph{}
+  
+  \vspace{1.7cm}
+  \makebox[3.8cm]{\hrulefill}
+  \hspace{1cm} \makebox[3.2cm]{\hrulefill}
+  \hspace{2.6cm} \makebox[6.3cm]{\hrulefill}
+  
+  \paragraph{}
+  \small{
+   \hspace*{01.3cm} Tutor(in)  
+   \hspace{3.05cm} Schulleiter(in) 
+   \hspace{3.4cm} Datum, Unterschrift, Erziehungsberechtigte(r)
+   }
+   
+  \paragraph{}
+  \vspace{0.6cm}
+  Wetzlar, den \tpl{InsDate}
+  
+  \vspace{0.2cm}
+  \hline
+  
+  \vfill
+  \centerline{
+  \small{Notenstufen:
+  (15-13) sehr gut, (12-10) gut, (9-7) befriedigend, (6-4) ausreichend, (3-1) mangelhaft, (0) ungenügend
+  }}
+
+%TPL-REPETITION-MARK
+
+\end{document}
+
+
+
+
+

@@ -30,4 +30,11 @@ Kursvorlagen erstellen und bearbeiten
 im Fehlerfall alle Sperrungen gegen gleichzeitiges Bearbeiten aufheben
 </div></div>
 
+
+<div class="bbutton"><a href="<?= URL_PREFIX ?>install.php?load=true">Einrichtung</a>
+<div>hier können Sie: <br>
+Globale Einstellungen ändern<br><br>
+Hinweis: Das Super-Administrator-Kennwort wird benötigt
+</div></div>
+
 <br style="clear:left">

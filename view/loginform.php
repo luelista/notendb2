@@ -1,22 +1,4 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>login</title>
-<link rel="stylesheet" type="text/css" href="<?=URL_PREFIX?>content/style.css">
-</head>
-<body>
 
-<div id="header">
-<div class="wrapper">
-  <h1>
-    Noten-Verwaltung
-  </h1>
-</div>
-</div>
-
-<div id="content">
-<div class="wrapper">
   <!-- recommend recent browser -->
   <script>
   if(!document.getElementById || (navigator.userAgent.indexOf("Firefox") < 1 && navigator.userAgent.indexOf("Chrome") < 1)) {
@@ -52,16 +34,3 @@
   <br><br><br>
   
   <script> document.getElementById("showMe").style.display="block" </script>
-</div>
-</div>
-
-<div id="footer">
-<div class="wrapper">
-  Copyright (c) 2012 Max Weller, Moritz Willig
-</div>
-</div>
-
-
-
-</body>
-</html>
