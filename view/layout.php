@@ -27,14 +27,18 @@
 <div class="wrapper">
   <div class="sysmenu">
     <strong><?= $Benutzername ?></strong>
-    | <a href="<?=URL_PREFIX?>kurs_template/view?datei=<?=$DID?>">Kursvorlagen</a>
+    
     | <a href="<?=URL_PREFIX?>user/change_password?datei=<?=$DID?>">Passwort ändern</a>
     | <a href="<?=URL_PREFIX?>user/logout">Abmelden</a>
-    <?php if ($IsAdmin): ?>
+    
     <br><small>
+    <?php if ($IsAdmin): ?>
       <a href="<?=URL_PREFIX?>admin/dashboard">Administrationsbereich</a>
-    </small>
     <?php endif; ?>
+    <?php if ($IsAdmin||$IsTutor): ?>
+    - <a href="<?=URL_PREFIX?>kurs_template/view?datei=<?=$DID?>">Kursvorlagen</a>
+    <?php endif; ?>
+    </small>
   </div>
   <h1>
     <a href="<?=URL_PREFIX?>">Noten-Verwaltung</a>

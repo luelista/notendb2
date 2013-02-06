@@ -21,7 +21,7 @@
 <tr><td>Thema: </td><td><input type="input" name="e[thema]" value="<?= htmlspecialchars($Data["thema"]) ?>"></td><td>Stochastik; Individuum und Gesellschaft</td></tr>
 <tr><td>Anzeigeposition: </td><td><input type="input" name="e[display_position]" value="<?= htmlspecialchars($Data["display_position"]) ?>"></td><td>(Reihenfolge in Tabelle)</td></tr>
 <tr><td>Exportposition: </td><td><input type="input" name="e[export_position]" value="<?= htmlspecialchars($Data["export_position"]) ?>"></td><td>(Zeile im Zeugnis)</td></tr>
-<tr><td>Fachrichtung: </td><td><input type="input" name="e[fachrichtung]" value="<?= htmlspecialchars($Data["fachrichtung"]) ?>"></td><td>(optional, legt Fachrichtung des Kursteilnehmers fest)</td></tr>
+<tr><td>Fachrichtung: </td><td><input type="input" name="e[fachrichtung]" value="<?= htmlspecialchars($Data["fachrichtung"]) ?>"></td><td>(optional, legt Fachrichtung des Kursteilnehmers fest <br><small>- sollte nur bei LK Technikwissenschaft angegeben werden</small>)</td></tr>
 
 <tr><td></td><td><input type="submit" value="   Speichern   "></td></tr>
 </table>

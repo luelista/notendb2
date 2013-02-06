@@ -95,7 +95,8 @@ td.firstcol {text-align:left}
   Download der Vorlagen:<br>
   <a href="<?= URL_PREFIX ?>content/Fertige%20Vorlagen/BG12_Vorlage.doc">BG12_Vorlage.doc</a>
   <a href="<?= URL_PREFIX ?>content/Fertige%20Vorlagen/BG13_Vorlage.doc">BG13_Vorlage.doc</a>
-  <br><br>
+  <br>
+    <small style="color:red"><b>Neu 06.02.2013: Verbesserte Vorlagen mit korrekter Fachrichtung</b></small><br>
   
 </div>
 
