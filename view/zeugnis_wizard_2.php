@@ -90,7 +90,7 @@ td.firstcol {text-align:left}
 </table>
 
 
-<div style="float:right;width:160px;padding-left: 10px; border-left: 1px solid #bbb;">
+<div class="noprint" style="float:right;width:160px;padding-left: 10px; border-left: 1px solid #bbb;">
   <br><br>
   Download der Vorlagen:<br>
   <a href="<?= URL_PREFIX ?>content/Fertige%20Vorlagen/BG12_Vorlage.doc">BG12_Vorlage.doc</a>
@@ -107,11 +107,20 @@ Word-Seriendruck-Funktion laden, um daraus Zeugnisse zu generieren.
 
 
 
-<form action="<?= URL_PREFIX ?>tabelle/zeugnis_3?datei=<?= $DID ?>" method="post">
+<form action="<?= URL_PREFIX ?>tabelle/zeugnis_3?datei=<?= $DID ?>" method="post" target="_blank">
 
 <input type="hidden" name="exp_name" value="<?= $TutorengruppeName ?>">
 <input type="hidden" name="kuid" value="<?= $Kuid ?>">
 <input type="submit" name="export" value="  Als CSV Exportieren  ">
 <input type="submit" name="export_xls" value="  Als Excel-Mappe Exportieren  ">
-<input type="submit" name="export_pdf" value="  Als PDF-Datei Exportieren  ">
+
+<hr><br>
+Alternativ können Sie die Zeugnisse direkt als PDF-Datei exportieren.
+<br><br>
+Fußzeile: <input type="text" name="footer" style="width:200px" value="Wetzlar, den <?= date("d.m.Y") ?>"><br>
+<input type="submit" name="export_pdf" value="  Vorschau  ">
+<input type="submit" name="export_pdf_save" value="  Speichern...  ">
 </form>
+</p>
+
+

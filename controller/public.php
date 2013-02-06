@@ -9,11 +9,12 @@
 	
   class PublicController extends Controller {
     
-    var $DB;
+    var $DB, $Schueler;
     
     function __construct() {
       parent::__construct();
       $this->DB = load_model("database");
+      $this->Schueler = load_model("schueler");
     }
     public function abi_vorschau() {
       $q="";
@@ -23,20 +24,16 @@
       $q.="</form>";
       
       if ($_POST["search"]) {
-        $schuelers = $this->DB->getlist("SELECT sid,name,vorname,username,geburtsdatum,d.* FROM schueler s INNER JOIN datei d ON s.did=d.did WHERE username LIKE '%s%%' AND Geburtsdatum='%s' ", $_POST['username'], $_POST['birthday']);
-        $q.= "<p>Gefundene Datensätze: ".count($schuelers)."</p>";
-        $col=0; $fach=array();
+        list($col, $schuelers, $fach) =$this->Schueler->get_noten_uebersicht($_POST['username'], $_POST['birthday']);
         
+        $q.= "<p>Gefundene Datensätze: ".count($schuelers)."</p>";
         $q.='<table><tr><td>/-</td>';
         foreach($schuelers as $d) {
           $q.= "<td>$d[name] $d[vorname] <br>$d[jahr] $d[hj]. Hj $d[stufe]$d[schulform]</td>";
-          
-          $ff=$this->DB->getlist("SELECT name,note  FROM rel_schueler_kurs rsk INNER JOIN kurs k ON k.kuid=rsk.r_kuid WHERE k.did=%d AND rsk.r_sid=%d",
-          $d['did'], $d['sid']);
-          foreach($ff as $f) $fach[$f['name']][$col] = $f;
-          $col++;
         }
-        //var_dump($fach);
+        $q.='</tr>';
+
+        
         $q.='</tr>';
         foreach($fach as $fname=>$fcols) {
           $q.='<tr><td>'.$fname.'</td>';

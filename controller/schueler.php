@@ -58,7 +58,7 @@
       $this->template_vars["Inhalt"] = 
                       (isset($_POST["e"]) ? "<div class='success'>Der Schüler wurde erfolgreich gespeichert.</div>":"").
                      get_view("simple_form", array("Data" => $schueler, "Error" => false, "MethodURL" => "schueler/edit/$sid"))
-                     ."<br><br>Letzte Änderung: $lastMod";
+                     .($sid != "new" ? "<br><br>Letzte Änderung: $lastMod<br><br><input type='button' value='Notenübersicht' onclick='location=\"".URL_PREFIX."schueler/noten_uebersicht_pdf/$sid?datei={$this->DID}\";'><br>" : "");
       
       $this->display_layout();
       
@@ -99,6 +99,37 @@
   			$this->display_layout();
   			return;
   		}
+  	}
+  	
+  	function noten_uebersicht_pdf($sid) {
+    	$schueler = $this->Schueler->get_by_id(intval($sid));
+    	list($cols, $schuelers, $fach) =$this->Schueler->get_noten_uebersicht($schueler['username'], $schueler['geburtsdatum']);
+    	
+    	$q=$morecols=""; $ZS="\r\n";
+      $q.='"Fach";"Noten"'.$ZS;
+      $q.='"--";"';
+      foreach($schuelers as $d) {
+        $morecols.="p{2cm}|"; $q.= " & \\pbox{ $d[jahr]  \\ {\\bfseries $d[stufe]$d[schulform] $d[hj]. Hj}}";
+      }
+      $q.='"';
+      
+      foreach($fach as $fname=>$fcols) {
+        $q.=$ZS.'"'.$fname.'";"';
+        for($i=0;$i<$cols;$i++) $q.=' & '.$fcols[$i]['note'].'';
+        $q.='"';
+      }
+      
+      $vorlage = ROOT."/content/template_uebersicht.tex";
+      $tempName = ROOT."/temp/export.tex";
+      $globRepl = array('\\tpl{Name}' => $schuelers[0]['vorname'].' '.$schuelers[0]['name'],
+        '\\tpl{morecols}' => $morecols);
+      //echo "<pre>$q";
+      
+      $export = load_model("xmlexport");
+      $export->preprocTexfile($vorlage, $tempName, $globRepl, $q);
+      $export->pdflatex($tempName, null);
+      
+    	
   	}
     
   }

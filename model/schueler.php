@@ -55,6 +55,22 @@
       $this->sql("SELECT * FROM {$this->table} WHERE {$this->idcol} = %d AND did = %d", $id, $this->DID);
       return $this->get();
     }
+    
+    function get_noten_uebersicht($username, $birthday) {
+      $schuelers = $this->getlist("SELECT sid,name,vorname,username,geburtsdatum,d.* FROM schueler s INNER JOIN datei d ON s.did=d.did WHERE username LIKE '%s%%' AND Geburtsdatum='%s' ", $username, $birthday);
+      $col=0; $fach=array();
+      
+      
+      foreach($schuelers as $d) {
+        $q.= "<td>$d[name] $d[vorname] <br>$d[jahr] $d[hj]. Hj $d[stufe]$d[schulform]</td>";
+        
+        $ff=$this->getlist("SELECT art,name,note  FROM rel_schueler_kurs rsk INNER JOIN kurs k ON k.kuid=rsk.r_kuid WHERE k.did=%d AND rsk.r_sid=%d ORDER BY display_position",
+        $d['did'], $d['sid']);
+        foreach($ff as $f) $fach[$f['art'].' '.$f['name']][$col] = $f;
+        $col++;
+      }
+      return array($col, $schuelers, $fach);
+    }
 	
     
     

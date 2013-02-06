@@ -525,53 +525,20 @@
         header("Content-disposition: attachment; filename=\"$_POST[exp_name].xls\"");
         header("Content-Type: application/vnd.ms-excel");
         readfile($tempName2);
-      } elseif ($_POST["export_pdf"]) {
+      } elseif ($_POST["export_pdf"] || $_POST["export_pdf_save"]) {
         $vorlage = ROOT."/content/template_zeugnis_q.tex";
         $tempName = ROOT."/temp/export.tex";
-        $tempName2 = ROOT."/temp/export.pdf";
         $globRepl = array(
-          '\\tpl{template_name}' => "$vorlage", 
-          '\\tpl{datetime}' => date("r"), 
           '\\tpl{stufe}' => $this->curDatei['stufe'],
           '\\tpl{datei}' => '['.$this->curDatei['schulform'].$this->curDatei['stufe'].'] '.$this->curDatei['jahr'].'-'.$this->curDatei['hj'],
-          '\\tpl{user_kuerzel}' => $this->Session->getUser('kuerzel'), 
           '\\tpl{export_name}' => $_POST['exp_name'], 
-          '\\tpl{count}' => count($schueler));
+          '\\tpl{footer}' => $_POST['footer']);
         
-        $this->preprocTexfile($vorlage, $tempName, $globRepl, $output);
-        shell_exec("cd \"".ROOT."/temp\"; TEXINPUTS=\"".ROOT."/content/\" pdflatex -interaction=batchmode -output-directory=\"".ROOT."/temp\" \"$tempName\"");
+        $export = load_model("xmlexport");
+        $export->preprocTexfile($vorlage, $tempName, $globRepl, $output);
+        $export->pdflatex($tempName, $_POST["export_pdf_save"] ? $_POST['exp_name'] : null);
         
-        header("Content-disposition: inline; filename=\"$_POST[exp_name].pdf\"");
-        header("Content-Type: application/pdf");
-        readfile($tempName2);
       }
-    }
-    
-    /**
-     * Prepare TEX input file for pdflatex command
-     * Replaces Placeholders with actual content from $data
-     * 
-     * @param   src    Template source file
-     * @param   temp   Temporary .tex file to create
-     * @param   glob   Global Template placeholders
-     * @param   data   Seitenweise Platzhalter
-     **/
-    private function preprocTexfile($src, $temp, $glob, $data) {
-      $lines=explode("\"\r\n\"", substr($data, 1, -1));
-      $headers=explode('";"', $lines[0]);
-      $vorlage=explode("%TPL-REPETITION-MARK", str_replace(array_keys($glob), array_values($glob), file_get_contents($src)));
-      $out=fopen($temp, 'w');
-      fputs($out, $vorlage[0]);
-      for($i=1; $i<count($lines); $i++) {
-        $replacement = explode('";"', $lines[$i]);
-        $page=$vorlage[1];
-        for($c=0; $c<count($replacement); $c++) {
-          $page=str_replace('\\tpl{'.$headers[$c].'}', $replacement[$c], $page);
-        }
-        fputs($out, "\n%--------- Page $i ---------------\n\n$page");
-      }
-      fputs($out, $vorlage[2]);
-      fclose($out);
     }
     
     /**

@@ -1,0 +1,89 @@
+\documentclass[a4paper]{minimal}
+\usepackage[utf8]{inputenc}
+\usepackage[top=20mm, bottom=20mm, left=20mm, right=20mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}           \usepackage[ngerman]{babel}
+\usepackage{graphicx}
+
+\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault} 
+\renewcommand{\arraystretch}{1.2}
+
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\setlength\arraycolsep{5pt}
+\setlength\tabcolsep{6pt}
+\setlength\arrayrulewidth{.4pt}
+\setlength{\parindent}{0pt}
+  
+\newcommand{\tpl}[1]{undef.}
+
+\newcommand{\ueberschrift}[1]{
+  \paragraph{}
+  \vspace{0.4cm}
+  {\fontsize{13}{14} \bfseries \selectfont  #1}
+  \vspace{0.15cm}
+  \paragraph{}
+}
+
+\newcommand{\small}[1]{
+  {\fontsize{9}{11} \selectfont  #1}
+}
+
+\def \colAw {3.7cm}
+\def \colBw {1.0cm}
+\def \colCw {1.4cm}
+\def \colDw {6.5cm}
+\def \colEw {2.1cm}
+\def \colFw {1.1cm}
+
+\begin{document}
+
+\hline
+\vspace{0.4cm}
+\centerline{\bfseries Notenübersicht für \tpl{Name} }
+\vspace{0.4cm}
+\hline
+
+
+\vspace{2cm}
+
+
+\begin{tabular}{|L{5cm}|\tpl{morecols}}
+%TPL-REPETITION-MARK
+\hline
+\tpl{Fach} \tpl{Noten} \\
+%TPL-REPETITION-MARK
+\hline
+\end{tabular}
+
+
+\vfill
+
+\hline
+\vspace{0.15cm}
+
+\includegraphics[scale=0.25]{icon}
+
+
+\vspace{-1cm}
+
+{\addtolength{\leftskip}{13mm} 
+
+
+Erstellt mit Noten-Verwaltungs-Software <<notendb>> \\ am \today
+\\
+\verb|\tpl{template_name}|
+\par}
+\vspace{0.2cm}
+\hline
+
+\end{document}
+
+
+
+
+

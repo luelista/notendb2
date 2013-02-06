@@ -1,6 +1,6 @@
 <?php
   /**
-   * Model for XML file export for offline editing
+   * Model for export methods
    * 
    * @package    NotenDB2
    * @subpackage Models
@@ -8,6 +8,55 @@
    **/
 	
   class XmlexportModel extends Model {
+    
+    
+    
+    /**
+     * Prepare TEX input file for pdflatex command
+     * Replaces Placeholders with actual content from $data
+     * 
+     * @param   src    Template source file
+     * @param   temp   Temporary .tex file to create
+     * @param   glob   Global Template placeholders
+     * @param   data   Seitenweise Platzhalter
+     **/
+    public function preprocTexfile($src, $temp, $glob, $data) {
+      $lines=explode("\"\r\n\"", substr($data, 1, -1));
+      
+      $glob['\\tpl{template_name}'] = "$src"; 
+      $glob['\\tpl{datetime}'] = date("r");
+      $glob['\\tpl{user_kuerzel}'] = load_model("session")->getUser('kuerzel'); 
+      $glob['\\tpl{count}'] = count($lines)-1;
+      
+      $headers=explode('";"', $lines[0]);
+      $vorlage=explode("%TPL-REPETITION-MARK", str_replace(array_keys($glob), array_values($glob), file_get_contents($src)));
+      $out=fopen($temp, 'w');
+      fputs($out, $vorlage[0]);
+      for($i=1; $i<count($lines); $i++) {
+        $replacement = explode('";"', $lines[$i]);
+        $page=$vorlage[1];
+        for($c=0; $c<count($replacement); $c++) {
+          $page=str_replace('\\tpl{'.$headers[$c].'}', $replacement[$c], $page);
+        }
+        fputs($out, "\n%--------- Page $i ---------------\n\n$page");
+      }
+      fputs($out, $vorlage[2]);
+      fclose($out);
+    }
+    
+    public function pdflatex($tempName, $save) {
+      shell_exec("cd \"".ROOT."/temp\"; TEXINPUTS=\"".ROOT."/content/:$TEXINPUTS\" pdflatex -interaction=batchmode -output-directory=\"".ROOT."/temp\" \"$tempName\"");
+      
+      if (!$save)
+        header("Content-disposition: inline");
+      else
+        header("Content-disposition: attachment; filename=\"$save.pdf\"");
+      
+      header("Content-Type: application/pdf");
+      readfile(substr($tempName, 0, -4).".pdf");
+      unlink(substr($tempName, 0, -4).".pdf");
+    }
+    
     
     public function export_datei($did, $lehrerId) {
       $Kurs = load_model("kurs");           $Kurs->DID = $did;

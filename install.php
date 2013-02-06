@@ -1,5 +1,6 @@
 <?php
   session_start();
+  error_reporting (E_ALL & ~E_NOTICE);
   
   define('URL_PREFIX', dirname($_SERVER['PHP_SELF']).'/');
   
