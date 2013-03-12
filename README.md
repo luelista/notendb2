@@ -34,14 +34,12 @@ Für verschiedene Zusatzfunktionen sind folgende weitere Pakete nötig:
  *  Für die Erstellung von PDF-Dateien muss die TeX-Distribution TeXLive muss installiert sein. 
     Die Installation wird für Ubuntu und OpenSUSE wie folgt durchgeführt:
     
-    Ubuntu:
-    
+    Ubuntu:    
     ```
     # apt-get install texlive
     ```
     
-    OpenSUSE:
-    
+    OpenSUSE:    
     ```
     # zypper install texlive texlive-latex
     ```
@@ -53,8 +51,10 @@ Wenn die oben angegebenen Systemanforderungen erfüllt sind, ist die Installatio
 
       Wir empfehlen, die Anwendung direkt aus dem Git-Repository herunterzuladen, um die neueste Version zu erhalten. Diese ist mit folgendem Befehl möglich:
 
+      ```
       $ git clone https://github.com/max-weller/notendb2.git
-
+      ```
+      
   2.  Rufen Sie das Hauptverzeichnis der Anwendung über einen Webbrowser auf. 
       Sie werden beim ersten Aufruf automatisch auf den Installationsassistenten
       weitergeleitet (./install.php).
