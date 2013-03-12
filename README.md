@@ -5,7 +5,9 @@ Lernleistung an der Werner-von-Siemens-Schule Wetzlar.
 
 
 -----
+
 Es folgt ein Auszug aus der Dokumentation zu Systemanforderungen und Installation. Die vollständige Dokumentation finden Sie unter http://notendb-hilfe.wikilab.de
+
 -----
 
 
