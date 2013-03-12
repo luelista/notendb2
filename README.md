@@ -54,7 +54,7 @@ Wenn die oben angegebenen Systemanforderungen erfüllt sind, ist die Installatio
       ```
       $ git clone https://github.com/max-weller/notendb2.git
       ```
-      
+
   2.  Rufen Sie das Hauptverzeichnis der Anwendung über einen Webbrowser auf. 
       Sie werden beim ersten Aufruf automatisch auf den Installationsassistenten
       weitergeleitet (./install.php).
@@ -71,8 +71,25 @@ Wenn die oben angegebenen Systemanforderungen erfüllt sind, ist die Installatio
 
 Mit Klick auf “Zur Startseite” gelangen Sie dann zum Loginformular, in dem Sie sich mit dem Benutzernamen “root” und dem eben vergebenen Passwort erstmalig einloggen können.
  
-Hinweis: Sie können die während der Installation angegebenen Parameter jederzeit verändern, indem Sie den Installations-assistenten erneut aufrufen. Hängen Sie dazu an die URL zum Hauptverzeichnis der Anwendung install.php an. Sie benötigen zum erneuten Starten das Passwort des Superadministrators root, welches Sie bei der Installation vergeben haben.
+Hinweis: Sie können die während der Installation angegebenen Parameter jederzeit verändern, indem Sie den Installations-assistenten erneut aufrufen. Hängen Sie dazu an die URL zum Hauptverzeichnis der Anwendung ``install.php`` an. Sie benötigen zum erneuten Starten das Passwort des Superadministrators root, welches Sie bei der Installation vergeben haben.
 
-Sollten Sie dieses Passwort nicht mehr wissen, können Sie in der Konfigurationsdatei .htconfig.php nachsehen. Es befindet sich in der Zeile, die mit ```$SITE_CONFIG[“LOGIN_ROOTPASW”]`` beginnt.
- 
+Sollten Sie dieses Passwort nicht mehr wissen, können Sie in der Konfigurationsdatei ``.htconfig.php`` nachsehen. Es befindet sich in der Zeile, die mit ``$SITE_CONFIG[“LOGIN_ROOTPASW”]`` beginnt.
+
+
+------------
+
+
+## notendb2 LICENSE ###############################
+
+Copyright © 2012-2013 Max Weller, Moritz Willig
+
+![Creative Commons Lizenzvertrag](http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png)
+
+notendb2 von [Max Weller und Moritz Willig](http://notendb-hilfe.wikilab.de) steht unter
+einer [Creative Commons Namensnennung-NichtKommerziell-KeineBearbeitung 3.0 Unported Lizenz](http://creativecommons.org/licenses/by-nc-nd/3.0/deed.de).
+
+Weitere Informationen, eine stets aktuelle Version
+dieses Dokuments sowie den Quelltext der Software
+finden Sie auch unter http://notendb-hilfe.wikilab.de/
+
 
