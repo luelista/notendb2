@@ -3,9 +3,11 @@
 Erstellt von Max Weller und Moritz Willig im Rahmen einer besonderen
 Lernleistung an der Werner-von-Siemens-Schule Wetzlar.
 
+
+-----
+Es folgt ein Auszug aus der Dokumentation zu Systemanforderungen und Installation. Die vollständige Dokumentation finden Sie unter http://notendb-hilfe.wikilab.de
 -----
 
-Es folgt ein Auszug aus der Dokumentation zu Systemanforderungen und Installation. Die vollständige Dokumentation finden Sie unter http://notendb-hilfe.wikilab.de
 
 ## 6. Praxis ##
 In diesem Kapitel fassen wir einige Hinweise und Anleitungen zur Installation, Wartung, Verwendung und Weiterentwicklung unserer Software zusammen. Ausführlichere Schritt-für-Schritt-Anleitungen und Handbücher sind dagegen im Anhang zu finden.
@@ -29,11 +31,15 @@ Für verschiedene Zusatzfunktionen sind folgende weitere Pakete nötig:
  *  Für die Erstellung von Microsoft Excel- Arbeitsblättern muss das Java Runtime Environment installiert sein.
  *  Für die Erstellung von PDF-Dateien muss die TeX-Distribution TeXLive muss installiert sein. 
     Die Installation wird für Ubuntu und OpenSUSE wie folgt durchgeführt:
+    
     Ubuntu:
+    
     ```
     # apt-get install texlive
     ```
+    
     OpenSUSE:
+    
     ```
     # zypper install texlive texlive-latex
     ```
@@ -65,6 +71,6 @@ Mit Klick auf “Zur Startseite” gelangen Sie dann zum Loginformular, in dem S
  
 Hinweis: Sie können die während der Installation angegebenen Parameter jederzeit verändern, indem Sie den Installations-assistenten erneut aufrufen. Hängen Sie dazu an die URL zum Hauptverzeichnis der Anwendung install.php an. Sie benötigen zum erneuten Starten das Passwort des Superadministrators root, welches Sie bei der Installation vergeben haben.
 
-Sollten Sie dieses Passwort nicht mehr wissen, können Sie in der Konfigurationsdatei .htconfig.php nachsehen. Es befindet sich in der Zeile, die mit ```$SITE_CONFIG[“LOGIN_ROOTPASW”]``` beginnt.
+Sollten Sie dieses Passwort nicht mehr wissen, können Sie in der Konfigurationsdatei .htconfig.php nachsehen. Es befindet sich in der Zeile, die mit ```$SITE_CONFIG[“LOGIN_ROOTPASW”]`` beginnt.
  
 
