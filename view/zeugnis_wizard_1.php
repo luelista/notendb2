@@ -10,7 +10,7 @@
   
 </div>
 
-<h2>Zeugnisdruck - Schritt 1: Tutorengruppe wählen</h2>
+<h2><span style="color: #777">Schritt 1: </span>Tutorengruppe wählen</h2>
 
 
 <form action="<?= URL_PREFIX ?>tabelle/zeugnis_2?datei=<?= $DID ?>" method="post">
@@ -34,7 +34,7 @@
 </select>
 
 
-<h2>Zeugnisdruck - Schritt 2: Felderreihenfolge definieren</h2>
+<h2><span style="color: #777">Schritt 2: </span>Felderreihenfolge definieren</h2>
 
 
 <table>

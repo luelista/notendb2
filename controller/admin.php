@@ -54,6 +54,12 @@
       $this->display_layout();
     }
     
+    function db_export() {
+      header("Content-Type: application/octet-stream");
+      header("Content-Disposition: attachment; filename=\"db_export_".date("Y_m_d").".bak\"");
+      passthru("mysqldump -u".DB_USER." -p".DB_PASSWORD." -h".DB_HOST." ".DB_NAME." | gzip");
+    }
+    
     //Dateien
     
     function dateien() {
