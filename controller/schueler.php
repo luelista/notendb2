@@ -14,18 +14,13 @@
     
     function __construct() {
       parent::__construct();
-      
       $this->require_login();
       
       $this->DB = load_model("database");
-      
       $this->Datei = load_model("datei");
-      
       $this->Schueler = load_model("schueler");
       $this->Schueler->DID = $this->DID;
-      
       $this->template_vars["Dateien"] = $this->Datei->get_ordered_list();
-      
       $this->require_datei();
     }
     

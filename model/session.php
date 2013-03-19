@@ -7,7 +7,7 @@
    * @author     Moritz Willig <>
    **/
 	
-  class SessionModel {
+  class SessionModel extends Model {
     
     /**
      * Initializes Session
