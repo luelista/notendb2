@@ -187,8 +187,8 @@
       }
       
       if ($_GET["viewMode"] == "gruppiert") {
-        $kursnamen = array();
-        foreach($kurse as $d) { $kursnamen[$d['kuid']] = $d['art'].$d['name']; }
+        $kursnamen = array(); $lastKurs = $lastKuid = "";
+        foreach($kurse as $d) { if ($lastKurs != $d['art'].$d['name']) {$lastKurs=$d['art'].$d['name'];$lastKuid=$d['kuid'];} $kursnamen[$d['kuid']] = $lastKuid; }
       } else {
         $kursnamen = array();
         foreach($kurse as $d) { $kursnamen[$d['kuid']] = $d['kuid']; }
@@ -212,7 +212,7 @@
       }
       if ($_GET["viewMode"] == "gruppiert") {
         $kursb = $kurse; $kurse=array(); $lastKurs="";
-        foreach($kursb as $d) { $d['lehrer_namen']=''; if($lastKurs!=$d['art'].$d['name'])$kurse[]=$d; }
+        foreach($kursb as $d) { $d['lehrer_namen']=''; if($lastKurs!=$d['art'].$d['name'])$kurse[]=$d; $lastKurs=$d['art'].$d['name']; }
       }
       
       // Implement filtering
