@@ -88,6 +88,9 @@
       $dateiInfo = $this->Datei->get_by_id($this->DID);
       $templates = $KursTemplate->get_all_by_target($dateiInfo["schulform"], $dateiInfo["stufe"], $dateiInfo["hj"]);
       
+      $this->DB->sql("SELECT datei.*, CONCAT('{',kurs.kuid,',',kurs.name,',',kurs.art,',',kurs.thema,',',kurs.fachrichtung,'}') as kurse FROM datei INNER JOIN kurs ON datei.did=kurs.did");
+      $dateien=$this->DB->getlist();
+      
       $this->template_vars["Inhalt"] = 
                      get_view("kurs_edit", array(
                           "Data" => $kurs,
@@ -96,7 +99,8 @@
                           "Lehrer" => $lehrer,
                           "Schueler" => $schueler,
                           "KursTemplates" => $templates,
-                          "Kuid" => $id
+                          "Kuid" => $id,
+                          "Dateien"=>$dateien
                      ));
       
       $this->display_layout();
