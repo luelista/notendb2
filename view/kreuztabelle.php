@@ -112,7 +112,7 @@ input.errord { background: #ff9999 !important; }
     } );
     function check_inp(i) {
       var v = $(i).val();
-      if (v.length == 1) { v. }
+      //if (v.length == 1) { v. }
       if ($(i) == "" || !is_int(v) || parseInt(v) < 0 || parseInt(v) > 15) $(i).addClass("errord"); else $(i).removeClass("errord");
     }
     function makeDirty() {

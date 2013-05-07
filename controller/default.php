@@ -13,15 +13,12 @@
     
     function __construct() {
       parent::__construct();
-      
       $this->require_login();
       
       $this->DB = load_model("database");
-      
       $this->Datei = load_model("datei");
       
       $this->template_vars["Dateien"] = $this->Datei->get_ordered_list();
-      
     }
     
     /**

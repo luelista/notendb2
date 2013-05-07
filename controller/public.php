@@ -1,10 +1,10 @@
 <?php
   /**
-   * Controller for managing user data
+   * Controller for public access (disabled)
    * 
    * @package    NotenDB2
    * @subpackage Controllers
-   * @author     Max Weller <max.weller@teamwiki.net>, Moritz Willig <>
+   * @author     Max Weller <max.weller@teamwiki.net>
    **/
 	
   class PublicController extends Controller {
@@ -16,7 +16,12 @@
       $this->DB = load_model("database");
       $this->Schueler = load_model("schueler");
     }
-    public function abi_vorschau() {
+
+    /**
+     * Preview for all marks of one student
+     * disabled atm
+     **/
+    private function abi_vorschau() {
       $q="";
       
       $q.="<form action='".URL_PREFIX."public/abi_vorschau' method='post'>";

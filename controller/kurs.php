@@ -15,20 +15,15 @@
     
     function __construct() {
       parent::__construct();
-      
       $this->require_login();
       
       $this->DB = load_model("database");
-      
       $this->Datei = load_model("datei");
-      
       $this->Kurs = load_model("kurs");
       $this->Kurs->DID = $this->DID;
-      
       $this->LehrerKurs = load_model("rel_lehrer_kurs");
       
       $this->template_vars["Dateien"] = $this->Datei->get_ordered_list();
-      
       $this->require_datei();
     }
     

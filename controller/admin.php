@@ -18,27 +18,23 @@
      */
     function __construct() {
       parent::__construct();
-      
       $this->require_login();
       
-      if (!$this->Session->isAdmin()) {
+      if (!$this->Session->isAdmin())
         die("no admin rights, sorry");
-      }
       
       $this->DB = load_model("database");
-      
       $this->Datei = load_model("datei");
-      
       $this->Lehrer = load_model("lehrer");
-      
       $this->Tutor = load_model("tutor");
       
       $this->template_vars["Dateien"] = $this->Datei->get_ordered_list();
-      
     }
     
     
-    // Dashboard
+    /**
+     * Display administrative Dashboard
+     **/
     function dashboard() {
       
       $this->template_vars["Inhalt"] = 
@@ -47,15 +43,29 @@
       $this->display_layout();
     }
     
+    /**
+     * Clear all editlocks
+     **/
     function clear_editlocks() {
       $this->Datei->k_clear_all_editlocks();
       
-      $this->template_vars["Inhalt"] = "<div class='success'>Alle Sperrungen wurden aufgehoben<br><br><input type='button' value='   OK   ' onclick='history.back()'></div>";
+      $this->template_vars["Inhalt"] = 
+        "<div class='success'>Alle Sperrungen wurden aufgehoben<br><br>
+         <input type='button' value='   OK   ' onclick='history.back()'></div>";
       $this->display_layout();
+    }
+    
+    function db_export() {
+      header("Content-Type: application/octet-stream");
+      header("Content-Disposition: attachment; filename=\"db_export_".date("Y_m_d").".bak\"");
+      passthru("mysqldump -u".DB_USER." -p".DB_PASSWORD." -h".DB_HOST." ".DB_NAME." | gzip");
     }
     
     //Dateien
     
+    /**
+     * List all files
+     **/
     function dateien() {
       
       $dateien = $this->Datei->get_all();
@@ -67,15 +77,21 @@
       
     }
     
+    /**
+     * Edit the details of a file
+     **/
     function datei($did) {
       if ($did == "new") $id = null; else $id = intval($did);
       
       
       if (isset($_POST["e"])) {
-        $this->Datei->set($id, $_POST["e"]["jahr"], $_POST["e"]["hj"], $_POST["e"]["schulform"], $_POST["e"]["stufe"], $_POST["e"]["archiviert"]);
+        $this->Datei->set($id, $_POST["e"]["jahr"], $_POST["e"]["hj"], 
+                               $_POST["e"]["schulform"], $_POST["e"]["stufe"],
+                               $_POST["e"]["archiviert"]);
         
         $this->Tutor->deleteAllByDid($id);
-        if (is_array($_POST["tutor_list"])) foreach($_POST["tutor_list"] as $d) $this->Tutor->addByRel($id, $d);
+        if (is_array($_POST["tutor_list"]))
+            foreach($_POST["tutor_list"] as $d) $this->Tutor->addByRel($id, $d);
       }
       
       
@@ -84,7 +100,9 @@
         $lehrer = $this->Lehrer->get_all("name,vorname");
       } else {
         $datei = $this->Datei->get_by_id($id); unset($datei["did"]);
-        $this->DB->sql("SELECT vorname,name,lid,r_did FROM lehrer AS l LEFT OUTER JOIN tutor AS t ON t.r_lid=l.lid AND r_did=%d WHERE r_did=%d OR isnull(r_did) ORDER BY name,vorname", $id, $id);
+        $this->DB->sql("SELECT vorname,name,lid,r_did 
+            FROM lehrer AS l LEFT OUTER JOIN tutor AS t ON t.r_lid=l.lid AND r_did=%d 
+            WHERE r_did=%d OR isnull(r_did) ORDER BY name,vorname", $id, $id);
         $lehrer = $this->DB->getlist();
       }
       
@@ -103,7 +121,9 @@
     
     //Lehrer
     
-    
+    /**
+     * List all user records of teachers
+     **/
     function lehrer_list() {
       
       $dateien = $this->Lehrer->get_all("name,vorname");
@@ -115,6 +135,9 @@
       
     }
     
+    /**
+     * Edit the user record of a teacher
+     **/
     function lehrer($did) {
       if ($did == "new") $id = null; else $id = intval($did);
       
@@ -129,16 +152,21 @@
       } else {
         $lehrer = $this->Lehrer->get_by_id($id);
       }
-      unset($lehrer["lid"]); unset($lehrer["lastlogin"]); unset($lehrer["lastlogin_from"]); unset($lehrer["password"]);
+      unset($lehrer["lid"]); unset($lehrer["lastlogin"]); 
+      unset($lehrer["lastlogin_from"]); unset($lehrer["password"]);
       
       $this->template_vars["Inhalt"] = 
-                     get_view("simple_form", array("Data" => $lehrer, "Error" => false, "MethodURL" => "admin/lehrer/$did"));
+                     get_view("simple_form", array("Data" => $lehrer, "Error" => false, 
+                                                   "MethodURL" => "admin/lehrer/$did"));
       
       $this->display_layout();
       
     }
     
     
+    /**
+     * Import all teachers from file
+     **/
     function lehrer_import() {
       if ((isset($_FILES["file"])) and ($_FILES["file"]["error"]==0)) {
         if (file_exists($_FILES["file"]["tmp_name"])) {
@@ -176,7 +204,9 @@
       }
     }
     
-    
+    /**
+     * Substitute User (for debugging reasons)
+     **/
     function su($lehrerID) {
       $Lehrer = load_model("lehrer");
       $lehrerInfo = $Lehrer->get_by_id($lehrerID);
@@ -186,6 +216,9 @@
       exit;
     }
     
+    /**
+     * Change/reset the password of another user
+     **/
     function set_password($lehrerID) {
       $this->require_login();
       $lehrerID = intval($lehrerID);
@@ -194,7 +227,8 @@
       $lehrerInfo = $Lehrer->get_by_id($lehrerID);
       
       $template_vars = array("Error" => false, "MethodURL" => "admin/set_password/$lehrerID",
-                "InfoText" => "Passwort ändern für ".$lehrerInfo["kuerzel"]    ."<script>$(function(){\$('[name=password]').attr('disabled',true);});</script>");
+                "InfoText" => "Passwort ändern für ".$lehrerInfo["kuerzel"]    
+                ."<script>$(function(){\$('[name=password]').attr('disabled',true);});</script>");
       
       if (isset($_POST["new_password_1"])) {
         if (strlen($_POST["new_password_1"]) >= 7) {
@@ -202,10 +236,12 @@
             $Lehrer->set_password($lehrerID, $_POST["new_password_1"]);
             $this->template_vars["Inhalt"] = "Das Passwort wurde erfolgreich geändert.";
           } else {
-            $template_vars["Error"] = "Passwort und Wiederholung müssen übereinstimmen. Das Passwort wurde nicht geändert.";
+            $template_vars["Error"] = "Passwort und Wiederholung müssen übereinstimmen. 
+                                       Das Passwort wurde nicht geändert.";
           }
         } else {
-          $template_vars["Error"] = "Das Passwort muss aus Sicherheitsgründen min. 7 Zeichen lang sein. Das Passwort wurde nicht geändert.";
+          $template_vars["Error"] = "Das Passwort muss aus Sicherheitsgründen min. 7 Zeichen
+                                     lang sein. Das Passwort wurde nicht geändert.";
         }
       }
       

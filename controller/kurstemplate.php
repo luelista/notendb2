@@ -1,6 +1,6 @@
 <?php
   /**
-   * Controller for viewing and creating Kurs items
+   * Controller for viewing and creating Kurs templates
    * 
    * @package    NotenDB2
    * @subpackage Controllers
@@ -15,20 +15,14 @@
     
     function __construct() {
       parent::__construct();
-      
       $this->require_login();
       
       $this->DB = load_model("database");
-      
       $this->Datei = load_model("datei");
-      
       $this->KursTemplate = load_model("kurs_template");
-      
       $this->LehrerKurs = load_model("rel_lehrer_kurs");
-      
+
       $this->template_vars["Dateien"] = $this->Datei->get_ordered_list();
-      
-      
     }
     
     function loadajax($ktid) {

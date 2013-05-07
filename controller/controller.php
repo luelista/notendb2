@@ -88,6 +88,8 @@
         exit;
       }
       
+      $this->template_vars["IsTutor"] = $this->Session->isTutor($datei['did']);
+			
       $this->template_vars["ScriptInfo"]["Datei"] = $datei;
       set_view_var("archiv", $this->archiv = $datei['archiviert']);
       $this->curDatei = $datei;

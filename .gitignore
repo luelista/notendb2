@@ -1,2 +1,2 @@
 .htconfig.php
-temp/
+temp/*

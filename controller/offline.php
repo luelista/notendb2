@@ -1,6 +1,6 @@
 <?php
   /**
-   * Controller to import and export data for offline editing
+   * Controller to import and export data for offline editing (disabled)
    * 
    * @package    NotenDB2
    * @subpackage Controllers
@@ -13,15 +13,12 @@
     
     function __construct() {
       parent::__construct();
-      
       $this->require_login();
       
       $this->DB = load_model("database");
-      
       $this->Datei = load_model("datei");
       
       $this->template_vars["Dateien"] = $this->Datei->get_ordered_list();
-      
     }
     
     function info() {

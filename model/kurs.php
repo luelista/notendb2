@@ -66,7 +66,13 @@
     
     function delete($id) {
       $this->sql("DELETE FROM {$this->table} WHERE {$this->idcol} = %d AND did = %d", $id, $this->DID);
-      return $this->execute();
+			$this->execute();
+			
+			//Wichtig: Zuordnungen lšschen, kann sonst zu Berechnungsfehlern der Fehlstunden-Summe fŸhren
+			$this->sql("DELETE FROM rel_schueler_kurs WHERE r_kuid = %d ", $id); $this->execute();
+			$this->sql("DELETE FROM rel_lehrer_kurs WHERE r_kuid = %d ", $id); $this->execute();
+			
+      return true;
     }
     
     function get_all() {
