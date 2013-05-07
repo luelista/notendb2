@@ -210,6 +210,10 @@
         }
         if ($vis) $schuelerb[]=$schueler[$i];
       }
+      if ($_GET["viewMode"] == "gruppiert") {
+        $kursb = $kurse; $kurse=array(); $lastKurs="";
+        foreach($kursb as $d) { $d['lehrer_namen']=''; if($lastKurs!=$d['art'].$d['name'])$kurse[]=$d; }
+      }
       
       // Implement filtering
       if ($kfilter !== false) {
