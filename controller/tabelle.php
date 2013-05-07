@@ -160,7 +160,7 @@
       if (!$isTutor && !$this->Session->isAdmin()) $_GET["viewMode"] = "meine_Kurse";
       
       // Load data depending on view mode
-      if ($_GET["viewMode"] == "alle_Kurse") {
+      if ($_GET["viewMode"] == "alle_Kurse" || $_GET["viewMode"] == "gruppiert") {
         $schueler = $this->Schueler->get_all();
         $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
       } else if ($_GET["viewMode"] == "Tutorengruppe") {
@@ -185,7 +185,14 @@
             URL_PREFIX."tabelle/noten_edit/".$kurse[$i]["kuid"]."?datei=".$this->DID : "";
         }
       }
-
+      
+      if ($_GET["viewMode"] == "gruppiert") {
+        $kursnamen = array();
+        foreach($kurse as $d) { $kursnamen[$d['kuid']] = $d['art'].$d['name']; }
+      } else {
+        $kursnamen = array();
+        foreach($kurse as $d) { $kursnamen[$d['kuid']] = $d['kuid']; }
+      }
       // Retrieve marks from database
       $schuelerb = array();
       for($i = 0; $i < count($schueler); $i++) {
@@ -193,10 +200,10 @@
                WHERE r_sid = %d",  $schueler[$i]['sid']);
         $info = $this->DB->getlist();
         $vis = false;
-        foreach($kurse as $d) $schueler[$i]['reldata'][$d['kuid']] = '--';
+        foreach($kurse as $d) $schueler[$i]['reldata'][$kursnamen[$d['kuid']]] = '--';
         foreach($info as $d) {
-          if ($kfilter !== false) $kfilter[$d['r_kuid']] = 1; $vis=true;
-          $schueler[$i]['reldata'][$d['r_kuid']] = 
+          if ($kfilter !== false) $kfilter[$kursnamen[$d['r_kuid']]] = 1; $vis=true;
+          $schueler[$i]['reldata'][$kursnamen[$d['r_kuid']]] = 
             '<nobr>'.htmlspecialchars($d['note']).' | <span class=f>'.htmlspecialchars($d['fehlstunden'])
             .'</span> | <span class=u>'.htmlspecialchars($d['fehlstunden_un']).'</span></nobr>';
           

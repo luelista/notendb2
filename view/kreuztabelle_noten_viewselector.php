@@ -4,6 +4,8 @@ Anzeigen:
   <option value="meine_Kurse" <?= $_GET["viewMode"] == "meine_Kurse" ? "selected" : "" ?>>Eigene Kurse</option>
   <option value="Tutorengruppe" <?= $_GET["viewMode"] == "Tutorengruppe" ? "selected" : "" ?>>Meine Tutorengruppe</option>
   <option value="alle_Kurse" <?= $_GET["viewMode"] == "alle_Kurse" ? "selected" : "" ?>>Alle Kurse</option>
+  <option disabled>-</option>
+  <option value="gruppiert" <?= $_GET["viewMode"] == "gruppiert" ? "selected" : "" ?>>gruppiert</option>
 </select>
 
 <?php if($_GET["viewMode"] == "Tutorengruppe"): ?>

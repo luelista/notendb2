@@ -245,7 +245,6 @@ for($i = 0; $i < count($Kurse);){
 
 
 
-
 <tr class="headrow Hlehrer">
 <th style=text-align:right class=firstcol><b><nobr>Schüler / Lehrer</nobr></b></th>
 <th class=boguscol>&nbsp;</th>

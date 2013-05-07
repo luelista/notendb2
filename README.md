@@ -71,7 +71,7 @@ Wenn die oben angegebenen Systemanforderungen erfüllt sind, ist die Installatio
 
 Mit Klick auf “Zur Startseite” gelangen Sie dann zum Loginformular, in dem Sie sich mit dem Benutzernamen “root” und dem eben vergebenen Passwort erstmalig einloggen können.
  
-Hinweis: Sie können die während der Installation angegebenen Parameter jederzeit verändern, indem Sie den Installations-assistenten erneut aufrufen. Hängen Sie dazu an die URL zum Hauptverzeichnis der Anwendung ``install.php`` an. Sie benötigen zum erneuten Starten das Passwort des Superadministrators root, welches Sie bei der Installation vergeben haben.
+Hinweis: Sie können die während der Installation angegebenen Parameter jederzeit verändern, indem Sie den Installations-assistenten erneut aufrufen. Hängen Sie dazu an die URL zum Hauptverzeichnis der Anwendung ``install.php` an. Sie benötigen zum erneuten Starten das Passwort des Superadministrators root, welches Sie bei der Installation vergeben haben.
 
 Sollten Sie dieses Passwort nicht mehr wissen, können Sie in der Konfigurationsdatei ``.htconfig.php`` nachsehen. Es befindet sich in der Zeile, die mit ``$SITE_CONFIG[“LOGIN_ROOTPASW”]`` beginnt.
 

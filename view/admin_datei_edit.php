@@ -35,6 +35,8 @@
   <?php endforeach; ?>
   
   </select>
+  <br>
+  <small>Tipp: Um mehrere Tutoren auszuwählen "Strg" auf der Tastatur gedrückt halten.</small>
   
   </td></tr></table>
   

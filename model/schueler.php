@@ -18,8 +18,8 @@
              "name" => "'%s'",
              "vorname" => "'%s'",
              "geburtsdatum" => "'%s'",
-			 "username" => "'%s'",
-			 "klasse" => "'%s'",
+      			 "username" => "'%s'",
+      			 "klasse" => "'%s'",
              "strasse" => "'%s'",
              "plz" => "'%s'",
              "ort" => "'%s'",
@@ -27,7 +27,8 @@
              "bemerkungen" => "'%s'",
              "kommentar" => "'%s'",
              "ist_g8" => "'%s'",
-             "fachrichtung" => "'%s'"
+             "fachrichtung" => "'%s'",
+             "email" => "'%s'"
         );
     
     
