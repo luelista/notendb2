@@ -178,7 +178,7 @@
       setcookie("noten_viewMode", $_GET["viewMode"], time()+10000, "/");
       
       // Insert edit buttons
-      if (!$this->archiv) {
+      if (!$this->archiv && !($_GET["viewMode"] == "gruppiert")) {
         for($i = 0; $i < count($kurse); $i++) {
           $kurse[$i]["head_lnk"] =
             ($kurse[$i]["lehrer_perm"] > 0 || $isTutor) ?
