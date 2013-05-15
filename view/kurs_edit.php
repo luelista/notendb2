@@ -57,33 +57,6 @@ h3 { margin-bottom: 5px; }
   <p><?= $Error ?></p>
   <?php endif; ?>
   
-  <form action="<?=URL_PREFIX?><?= $MethodURL ?>asd?datei=<?= $DID ?>" method="post">
-  <h3><tt>1.</tt> Kurs und Schüler aus Datei kopieren:</h3>
-  
-  <table>
-    <tr><td>
-    Datei:</td><td><select id="selDateiCopy" style="width:300px" onchange="adjustKurs()">
-      <option value="">- Hier klicken zum Auswählen -</option>
-      <?php foreach($Dateien as $d): ?>
-      <option value="<?=$d["did"]?>"><?=$d["art"]?> <?=$d["name"]?> - <?=$d["thema"]?></option>
-      <?php endforeach; ?>
-    </select>
-    </td></tr>
-    <tr><td>
-    Kurs:</td><td><select id="selKursCopy" style="width:300px" disabled>
-      <option value="">- Hier klicken zum Auswählen -</option>
-      <?php foreach($KursTemplates as $d): ?>
-      <option value="<?=$d["ktid"]?>"><?=$d["art"]?> <?=$d["name"]?> - <?=$d["thema"]?></option>
-      <?php endforeach; ?>
-    </select>
-    </td></tr>
-  </table>
-  <input type="submit" value="   Kopieren   " style="background:#7f7">
-  
-  </form>
-  <hr>
-  <b>oder</b>
-  <hr>
   
   <form action="<?=URL_PREFIX?><?= $MethodURL ?>?datei=<?= $DID ?>" method="post">
   
@@ -156,3 +129,33 @@ h3 { margin-bottom: 5px; }
   
   </form>
   <?php endif; ?>
+  <!--
+  <hr>
+  <b>oder</b>
+  <hr>
+  
+  <form action="<?=URL_PREFIX?><?= $MethodURL ?>asd?datei=<?= $DID ?>" method="post">
+  <h3><tt>1.</tt> Kurs und Schüler aus Datei kopieren:</h3>
+  
+  <table>
+    <tr><td>
+    Datei:</td><td><select id="selDateiCopy" style="width:300px" onchange="adjustKurs()">
+      <option value="">- Hier klicken zum Auswählen -</option>
+      <?php foreach($Dateien as $d): ?>
+      <option value="<?=$d["did"]?>"><?=$d["art"]?> <?=$d["name"]?> - <?=$d["thema"]?></option>
+      <?php endforeach; ?>
+    </select>
+    </td></tr>
+    <tr><td>
+    Kurs:</td><td><select id="selKursCopy" style="width:300px" disabled>
+      <option value="">- Hier klicken zum Auswählen -</option>
+      <?php foreach($KursTemplates as $d): ?>
+      <option value="<?=$d["ktid"]?>"><?=$d["art"]?> <?=$d["name"]?> - <?=$d["thema"]?></option>
+      <?php endforeach; ?>
+    </select>
+    </td></tr>
+  </table>
+  <input type="submit" value="   Kopieren   " style="background:#7f7">
+  
+  </form>
+  -->

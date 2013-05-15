@@ -481,10 +481,10 @@
       } elseif ($_POST["export_xls"]) {
         $tempName = ROOT."/temp/export.txt";
         $tempName2 = ROOT."/temp/export.xls";
-        
+        $jarPath = ROOT."/bin/MakeMeExcel.jar";
         file_put_contents($tempName, $output);
         
-        shell_exec("java -jar /srv/www/include/MakeMeExcel.jar \"$_POST[exp_name]\" if \"$tempName\" of \"$tempName2\"");
+        shell_exec("java -jar $jarPath \"$_POST[exp_name]\" if \"$tempName\" of \"$tempName2\"");
         header("Content-disposition: attachment; filename=\"$_POST[exp_name].xls\"");
         header("Content-Type: application/vnd.ms-excel");
         readfile($tempName2);
