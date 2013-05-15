@@ -483,8 +483,12 @@
         $tempName2 = ROOT."/temp/export.xls";
         $jarPath = ROOT."/bin/MakeMeExcel.jar";
         file_put_contents($tempName, $output);
+        if (shell_exec("which java")=="") {
+          die("Fehler: Excel-Dateien koennen nicht erstellt werden, da das JRE nicht installiert ist. Bitte wenden Sie sich an den Administrator.");
+        }
+        $cmd = "java -jar $jarPath \"$_POST[exp_name]\" if \"$tempName\" of \"$tempName2\"";
         
-        shell_exec("java -jar $jarPath \"$_POST[exp_name]\" if \"$tempName\" of \"$tempName2\"");
+        shell_exec($cmd);
         header("Content-disposition: attachment; filename=\"$_POST[exp_name].xls\"");
         header("Content-Type: application/vnd.ms-excel");
         readfile($tempName2);
