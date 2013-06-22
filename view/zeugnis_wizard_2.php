@@ -93,6 +93,8 @@ td.firstcol {text-align:left}
 <div class="noprint" style="float:right;width:160px;padding-left: 10px; border-left: 1px solid #bbb;">
   <br><br>
   Download der Vorlagen:<br>
+  <a href="<?= URL_PREFIX ?>content/Fertige%20Vorlagen/BG11_Vorlage_1.doc">BG11_Vorlage_1Hj.doc</a>
+  <a href="<?= URL_PREFIX ?>content/Fertige%20Vorlagen/BG11_Vorlage_2.doc">BG11_Vorlage_2Hj.doc</a>
   <a href="<?= URL_PREFIX ?>content/Fertige%20Vorlagen/BG12_Vorlage.doc">BG12_Vorlage.doc</a>
   <a href="<?= URL_PREFIX ?>content/Fertige%20Vorlagen/BG13_Vorlage.doc">BG13_Vorlage.doc</a>
   <br>

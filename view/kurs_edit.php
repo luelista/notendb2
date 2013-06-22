@@ -79,11 +79,11 @@ h3 { margin-bottom: 5px; }
 
   <table width=100%>
     
-    <tr><td>Fach: </td><td><input type="input" name="e[name]" value="<?= htmlspecialchars($Data["name"]) ?>" style="width:100%"></td></tr>
+    <tr><td>Fach: </td><td><input type="input" name="e[name]" value="<?= htmlspecialchars($Data["name"]) ?>" style="width:100%" readonly></td></tr>
     
-    <tr><td colspan=2>Thema: </td></tr><tr><td colspan=2><input type="input" name="e[thema]" value="<?= htmlspecialchars($Data["thema"]) ?>" style="width:100%"></td></tr>
-    <tr><td>Art (LK/GK): </td><td><input type="input" name="e[art]" value="<?= htmlspecialchars($Data["art"]) ?>" style="width:100%"></td></tr>
-    <tr><td>Wochen-<br>stunden: </td><td><input type="input" name="e[wochenstunden]" value="<?= htmlspecialchars($Data["wochenstunden"]) ?>" style="width:100%"></td></tr>
+    <tr><td colspan=2>Thema: </td></tr><tr><td colspan=2><input type="input" name="e[thema]" value="<?= htmlspecialchars($Data["thema"]) ?>" style="width:100%" readonly></td></tr>
+    <tr><td>Art (LK/GK): </td><td><input type="input" name="e[art]" value="<?= htmlspecialchars($Data["art"]) ?>" style="width:100%" readonly></td></tr>
+    <tr><td>Wochen-<br>stunden: </td><td><input type="input" name="e[wochenstunden]" value="<?= htmlspecialchars($Data["wochenstunden"]) ?>" style="width:100%" readonly></td></tr>
     <tr><td colspan=2><br>
       <input type="button" onclick="if(confirm('Möchten Sie diesen Kurs einschließlich der zugeordneten Informationen löschen?')) document.forms.deleteform.submit()" value="Kurs löschen" style="background:#fcc; float:right;">
   <input type="submit" value="   Speichern   " style="background:#7f7">

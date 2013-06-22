@@ -59,7 +59,7 @@
           $enabled="";
           $enabled="disabled";
           $schueler[$i]['reldata'][$d['kuid']] = 
-            '<img src="'.URL_PREFIX.'content/button_cancel.png" title="Nicht Zugeordnet">';
+            '<img class="unchecked_'.$d['kuid'].'" src="'.URL_PREFIX.'content/button_cancel.png" title="Nicht Zugeordnet">';
         }
         foreach($info as $d) {
           $enabled="";
@@ -71,7 +71,7 @@
       
       $this->template_vars["Inhalt"] =
                   ($this->archiv?"<div style='float:right'>Archivierte Datei - bearbeiten nicht möglich!</div>":
-                  "<div style='float:right'>Tipp: Klicken Sie auf das Stift-Icon, um Schüler auszuwählen.</div>").
+                  "<div style='float:right'>Tipp: Klicken Sie auf das Stift-Icon, um Schüler auszuwählen.<br>Klicken Sie auf die Anzahl, um die Zuordnung zu kopieren</div>").
                   get_view("kreuztabelle", array(
                       "Schueler" => $schueler,
                       "Kurse" => $kurse,
@@ -160,7 +160,7 @@
       if (!$isTutor && !$this->Session->isAdmin()) $_GET["viewMode"] = "meine_Kurse";
       
       // Load data depending on view mode
-      if ($_GET["viewMode"] == "alle_Kurse" || $_GET["viewMode"] == "gruppiert") {
+      if ($_GET["viewMode"] == "alle_Kurse") {
         $schueler = $this->Schueler->get_all();
         $kurse = $this->Kurs->get_all_with_lehrer_namen_and_permission($this->Session->getUID());
       } else if ($_GET["viewMode"] == "Tutorengruppe") {
@@ -178,7 +178,7 @@
       setcookie("noten_viewMode", $_GET["viewMode"], time()+10000, "/");
       
       // Insert edit buttons
-      if (!$this->archiv && !($_GET["viewMode"] == "gruppiert")) {
+      if (!$this->archiv && !($_GET["gruppiert"] == "true")) {
         for($i = 0; $i < count($kurse); $i++) {
           $kurse[$i]["head_lnk"] =
             ($kurse[$i]["lehrer_perm"] > 0 || $isTutor) ?
@@ -186,7 +186,7 @@
         }
       }
       
-      if ($_GET["viewMode"] == "gruppiert") {
+      if ($_GET["gruppiert"] == "true") {
         $kursnamen = array(); $lastKurs = $lastKuid = "";
         foreach($kurse as $d) { if ($lastKurs != $d['art'].$d['name']) {$lastKurs=$d['art'].$d['name'];$lastKuid=$d['kuid'];} $kursnamen[$d['kuid']] = $lastKuid; }
       } else {
@@ -204,13 +204,13 @@
         foreach($info as $d) {
           if ($kfilter !== false) $kfilter[$kursnamen[$d['r_kuid']]] = 1; $vis=true;
           $schueler[$i]['reldata'][$kursnamen[$d['r_kuid']]] = 
-            '<nobr>'.htmlspecialchars($d['note']).' | <span class=f>'.htmlspecialchars($d['fehlstunden'])
-            .'</span> | <span class=u>'.htmlspecialchars($d['fehlstunden_un']).'</span></nobr>';
+            '<nobr><span'.($d['note']<5?' style="color:red"':'').'>'.htmlspecialchars($d['note']).'</span><span class=s> | </span><span class=f>'.htmlspecialchars($d['fehlstunden'])
+            .'</span><span class=s> | </span><span class=u>'.htmlspecialchars($d['fehlstunden_un']).'</span></nobr>';
           
         }
         if ($vis) $schuelerb[]=$schueler[$i];
       }
-      if ($_GET["viewMode"] == "gruppiert") {
+      if ($_GET["gruppiert"] == "true") {
         $kursb = $kurse; $kurse=array(); $lastKurs="";
         foreach($kursb as $d) { $d['lehrer_namen']=''; if($lastKurs!=$d['art'].$d['name'])$kurse[]=$d; $lastKurs=$d['art'].$d['name']; }
       }

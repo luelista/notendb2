@@ -4,7 +4,7 @@
    * 
    * @package    MVC_Framework
    * @subpackage System
-   * @author     Max Weller <max.weller@teamwiki.net>, Moritz Willig <>
+   * @author     Max Weller <max.weller@teamwiki.net>, Moritz Willig <moritz.willig@gmail.com>
    **/
   
   define('ROOT', dirname(__FILE__));

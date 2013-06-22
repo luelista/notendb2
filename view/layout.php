@@ -22,7 +22,8 @@
 </style>
 </head>
 <body>
-
+  
+<?php if(!$Plain): ?>
 <div id="header">
 <div class="wrapper">
   <div class="sysmenu">
@@ -77,21 +78,24 @@
   <div class="clear"></div>
 </div>
 </div>
+<?php endif; ?>
 
 <div id="content">
-<div class="wrapper">
+<?php if(!$Plain): ?><div class="wrapper"><?php endif; ?>
   <?= $Inhalt ?>
   
   
-</div>
+<?php if(!$Plain): ?></div><?php endif; ?>
 </div>
 
+<?php if(!$Plain): ?>
 <div id="footer">
 <div class="wrapper">
 <b style="float:right;color:black;">Bei technischen Fragen und Problemen können Sie uns per Mail an <a href="mailto:notendb@wikilab.de">notendb@wikilab.de</a> erreichen.</b>
   (c) 2012 Max Weller, Moritz Willig
 </div>
 </div>
+<?php endif; ?>
 
 <!-- Copyright (c) 2012 "MW" Max Weller, Moritz Willig, mw.wikilab.de -->
 

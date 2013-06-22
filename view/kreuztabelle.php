@@ -167,6 +167,23 @@ input.errord { background: #ff9999 !important; }
           $("input[name^='rsk_enable['][name$='][" + id + "]']:checked").each(function(){cnt++});
           $(".checked_" + id + "").each(function(){cnt++});
           $(this).html(cnt);
+        }).click(function() {
+          var id=$(this).attr("data-kuid");
+          if (tabMode == "zuordnung_view") {
+            var vals = [];
+            $(".checked_" + id + ",.unchecked_"+id).each(function(){ if($(this).attr("class").substring(0,2)=="un") vals.push(0); else vals.push(1); });
+            var valString=vals.join('-');
+            localStorage.zuordnungClipboard = valString;
+          } else {
+            if (!localStorage.zuordnungClipboard) {
+              alert("Bitte vorher eine Zuordnung kopieren!");
+            } else {
+              var vals = localStorage.zuordnungClipboard.split("-");
+              $("input[name^='rsk_enable['][name$=']["+id+"]']").each(function(index) {
+                $(this).attr('checked',vals[index]==1);
+              })
+            }
+          }
         });
       }
       $("input[type=checkbox]").each(function() { var a=this;$(a).closest("td").click(function(e) {
@@ -244,7 +261,7 @@ for($i = 0; $i < count($Kurse);){
 </tr>
 
 
-
+<?php if($_GET["gruppiert"] != "true"): ?>
 <tr class="headrow Hlehrer">
 <th style=text-align:right class=firstcol><b><nobr>Schüler / Lehrer</nobr></b></th>
 <th class=boguscol>&nbsp;</th>
@@ -257,6 +274,7 @@ for($i = 0; $i < count($Kurse);){
 <th>-</th>
 
 </tr>
+<?php endif; ?>
 
   <?php if($controller_function == "noten_edit"): ?>
   <tr class="headrow Hlehrer">

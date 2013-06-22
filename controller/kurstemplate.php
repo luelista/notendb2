@@ -41,7 +41,9 @@
     }
     
     function edit($kuid) {
-      if ($kuid == "new") $id = null; else $id = intval($kuid);
+      $this->template_vars["Plain"] = true;
+			
+			if ($kuid == "new") $id = null; else $id = intval($kuid);
       
       if (isset($_POST["e"])) {
         $set = $_POST["e"];
@@ -69,6 +71,16 @@
       $this->display_layout();
       
     }
+		
+		function delete() {
+			$ktid = intval($_POST['ktid']);
+			
+			$this->KursTemplate->delete($ktid);
+			
+			header("Location: ".URL_PREFIX."kurstemplate/view/?datei=".$this->DID);
+			
+		}
+		
   }
   
 ?>
